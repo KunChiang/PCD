@@ -1,0 +1,48 @@
+# -*- coding: utf-8 -*-
+
+configuration:
+  languages: zh-ch # temporarily does not support i18n
+  name: PCD # Cloud name
+  Storage: json # Storage method ( mysql or json )
+  mysql: # if you already have mysql installed and have chosen it
+    host: ${MYSQL_HOST}
+    user: ${MYSQL_USER}
+    passwd: ${MYSQL_PASSWD}
+    port: ${MYSQL_PORT}
+  maxsize: 1024 # Max size allowed for upload (mb)
+  type: # type of upload allowed 
+    - ai
+    - apk
+    - avi
+    - css
+    - dmg
+    - doc
+    - exe
+    - flv
+    - gif
+    - html
+    - iso
+    - jpg
+    - js
+    - log
+    - mov
+    - mp3
+    - otf
+    - pdf
+    - php
+    - png
+    - ppt
+    - pptx
+    - psd
+    - sketch
+    - sql
+    - wav
+    - xls
+    - zip
+    - jpeg
+    - mp4
+    - py
+    - go
+    - docx
+    - md
+    - json

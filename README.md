@@ -1,6 +1,6 @@
 # PCD
 
-存储数据结构 json:
+存储数据结构
 
 ```json
 {
@@ -36,6 +36,17 @@
 }
 ```
 
+with folder树：
+
+```json
+[
+  { "id": "", "pid": "", "name": "" },
+  { "id": "", "pid": "", "name": "" }
+]
+```
+
+OR 数据结构：
+
 ```json
 [
     {
@@ -48,7 +59,7 @@
         "date": "2021/03/26 18:20:55",
     },
     {
-        "id": ,
+        "id": 0,
         "pId": 0,
         "name": "Kareo API Guide.pdf",
         "type": "pdf",

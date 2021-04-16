@@ -1075,6 +1075,18 @@ webpackJsonp([0], {
     },
     pjeT: function (t, e, n) {
         "use strict";
+        // Array.prototype.indexOf = function (val) {
+        //     for (var i = 0; i < this.length; i++) {
+        //         if (this[i]['id'] == val) return i;
+        //     }
+        //     return -1;
+        // };
+        // Array.prototype.remove = function (val) {
+        //     var index = this.indexOf(val);
+        //     if (index > -1) {
+        //         this.splice(index, 1);
+        //     }
+        // };
         Object.defineProperty(e, "__esModule", { value: !0 });
         var r = n("Xxa5"),
             o = n.n(r),
@@ -1086,6 +1098,7 @@ webpackJsonp([0], {
                     return {
                         namels: [],
                         indexs: 0,
+                        currpath: '/',
                         disbxas: !1,
                         loadingx: !1,
                         imurlqz:
@@ -1113,7 +1126,7 @@ webpackJsonp([0], {
                                                 case 0:
                                                     return (
                                                         (n.next = 2),
-                                                        e.$axios.get("/tclist?limit=12&offset=" + 12 * t)
+                                                        e.$axios.get("/tclist?limit=12&offset=" + 12 * t + "&path=" + this.currpath)
                                                     );
                                                 case 2:
                                                     (r = (r = n.sent).data).length < 12 &&
@@ -1156,9 +1169,17 @@ webpackJsonp([0], {
                             })
                         )();
                     },
-                    xsdwe: function (e, t) {
+                    __getNewPath: function (path, name) {
+                        if (this.__isRoot(path)) return path + name;
+                        else return path + '/' + name;
+                    },
+                    xsdwe: function (e, t, p) {
                         if (t == "folder") {
-                            console.log("CurrPath: root");
+                            this.currpath = this.__getNewPath(p, e)
+                            this.indexs = 0;
+                            this.namels = [];
+                            this.getlist(this.indexs);
+                            console.log("CurrPath: ", this.currpath);
                         } else {
                             window.open(
                                 window.location.protocol +
@@ -1169,12 +1190,24 @@ webpackJsonp([0], {
                             );
                         }
                     },
-                    delete: function (t) {
+                    __remove: function (d) {
+                        var arr = this.namels;
+                        var i = 0;
+                        for (i; i < arr.length; i++) {
+                            if (arr[i]['id'] == d) {
+                                console.log("will delete:", arr[i])
+                                break
+                            }
+                        }
+                        arr.splice(i, 1);
+                        return arr
+                    },
+                    delete: function (d, t) {
                         var r = confirm("确定要删除文件：" + t + " 吗？？");
                         var e = this;
                         if (r == true) {
-                            e.$axios.get("/delete/" + t);
-                            location.reload();
+                            e.$axios.get("/delete/" + d);
+                            e.namels = e.__remove(d);
                             console.log("delete file: " + t);
                         } else {
                             console.log("cancel delete");
@@ -1205,14 +1238,18 @@ webpackJsonp([0], {
                                 cancelAnimationFrame(timer);
                             }
                         });
-                        // var e = this;
-                        // if (document.documentElement.scrollTop > 0) {
-                        //     document.documentElement.scrollTop = 0;
-                        //     console.log("To the top: ", document.documentElement.scrollTop)
-                        // }
-                        // else {
-                        //     console.log("On th top")
-                        // }
+                    },
+                    __isRoot: function (p) {
+                        if (p == '/') return true;
+                        else return false;
+                    },
+                    "back": function () {
+                        var path = this.currpath;
+                        var sub = path.split('/').slice(0, -1).join('/');
+                        this.currpath = sub ? sub : '/'
+                        this.indexs = 0;
+                        this.namels = [];
+                        this.getlist(this.indexs);
                     }
                 },
             },
@@ -1225,6 +1262,29 @@ webpackJsonp([0], {
                         "el-row",
                         { attrs: { gutter: 32 } },
                         [
+                            n("el-col", { attrs: { span: 24 } },
+                                [n(
+                                    "span",
+                                    {
+                                        staticStyle: { "font-size": "14px", "line-height": "30px" },
+                                    },
+                                    [this._v(" 当前路径: " + this.currpath)]
+                                ),
+                                n(
+                                    "el-button",
+                                    {
+                                        staticStyle: { "padding-left": "revert", "float": "right" },
+                                        attrs: {
+                                            size: "small",
+                                            icon: "el-icon-caret-left",
+                                            disabled: this.__isRoot(this.currpath) ? true : false,
+                                        },
+                                        on: { click: t.back },
+                                    },
+                                    [t._v(t._s("上一层"))]
+                                ),
+                                ]
+                            ),
                             n(
                                 "transition-group",
                                 { attrs: { name: "list" } },
@@ -1265,7 +1325,7 @@ webpackJsonp([0], {
                                                                 {
                                                                     staticStyle: { "font-size": "10px" },
                                                                 },
-                                                                [t._v("上传时间: " + t._s(e.date))]
+                                                                [t._v(e.type == "folder" ? "创建时间" + t._s(e.date) : "上传时间: " + t._s(e.date))]
                                                             ),
                                                         ]
                                                     ),
@@ -1287,12 +1347,12 @@ webpackJsonp([0], {
                                                                     "border-radius": "4px",
                                                                 },
                                                                 attrs: {
-                                                                    src: t.imurlqz + e.down,
+                                                                    src: t.imurlqz + e.id,
                                                                     fit: "cover",
                                                                 },
                                                                 nativeOn: {
                                                                     click: function (n) {
-                                                                        return t.xsdwe(e.down, e.type);
+                                                                        return t.xsdwe(e.down, e.type, e.path);
                                                                     },
                                                                 },
                                                             }),
@@ -1318,6 +1378,7 @@ webpackJsonp([0], {
                                                                             attrs: {
                                                                                 href: t.downlinkx + e.down,
                                                                                 download: e.down,
+                                                                                disabled: e.type == 'folder' ? true : false,
                                                                             },
                                                                         },
                                                                         [t._v("下载")]
@@ -1330,10 +1391,13 @@ webpackJsonp([0], {
                                                                                 "font-size": "16px",
                                                                                 margin: "left",
                                                                             },
-                                                                            attrs: { shadow: "hover" },
+                                                                            attrs: {
+                                                                                shadow: "hover",
+                                                                                disabled: e.type == 'folder' ? true : false,
+                                                                            },
                                                                             nativeOn: {
                                                                                 click: function (n) {
-                                                                                    return t.delete(e.down);
+                                                                                    return t.delete(e.id, e.down);
                                                                                 },
                                                                             },
                                                                         },

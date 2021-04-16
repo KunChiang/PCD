@@ -14318,6 +14318,7 @@
 .select_wrap {
   width: 800px;
   margin: 10px auto;
+  float: left
 }
 
 .select_wrap dt {

@@ -55,7 +55,6 @@ def uploaded_file(filename):
     else:
         with open(fileList, 'r') as f:
             cur = json.load(f)
-            cur = cur['root']['children']
         for i in cur:
             if i["name"] == filename:
                 store_path = os.path.join(rawFiles, i["name"])
@@ -90,19 +89,19 @@ def uploaded_file(filename):
     return response
 
 
-@app.route('/icon/<filename>')
-def icon(filename):
-    ftype = getFileType(filename)
-    thumbnail = getThumbnail(filename)
+@app.route('/icon/<fid>')
+def icon(fid):
+    # ftype = getFileType(filename)
+    thumbnail = getThumbnail(fid)
     response = make_response(send_from_directory(
-        thumbnailPath if isImg(ftype) else 'icon', thumbnail.split('/')[-1]))
+        "/".join(thumbnail.split('/')[:-1]), thumbnail.split('/')[-1]))
     response.headers["Content-Type"] = "image/png"
     return response
 
 
 @app.route('/tclist', methods=['GET'])
 def tclist():
-    if (not request.args.get("limit")) or (not request.args.get("offset")):
+    if (not request.args.get("limit")) or (not request.args.get("offset")) or (not request.args.get("path")):
         return jsonify({"err": "参数欠缺", "author": "Kun"})
     else:
         if ismysql:
@@ -114,9 +113,14 @@ def tclist():
             datasds = curxsd.fetchall()
             curxsd.close()
         else:
+            path = request.args.get("path")
             with open(fileList, 'r') as f:
                 xsdawe = json.load(f)
-                files = xsdawe["root"]["children"]
+                files = []
+                for i in xsdawe:
+                    if i['path'] == path:
+                        files.append(i)
+                # files = xsdawe
                 files.reverse()
                 datasds = files[int(request.args.get("offset")):int(
                     request.args.get("offset"))+int(request.args.get("limit"))]
@@ -129,25 +133,25 @@ def tclist():
                 xsdwok = ix["name"]
             sdwewqrt.append(
                 {
-                    "name": xsdwok, "date": ix["date"], "type": ix["type"], "down": ix["name"]
+                    "id": ix["id"],
+                    "pId": ix["pId"],
+                    "name": xsdwok,
+                    "date": ix["date"],
+                    "type": ix["type"],
+                    "down": ix["name"],
+                    "path": ix["path"],
                 }
             )
         return jsonify(sdwewqrt)
 
 
-@app.route('/uploads', methods=['POST', "PUT"])
+@app.route('/uploads/', methods=['POST', "PUT"])
 def upload_files():
     file = request.files['file']
+    path = request.args.get("path")
     if file and allowed_file(file.filename):
-        print("[+] upload file: ", file.filename)
-        import hashlib
-        md5Name = hashlib.md5(file.read()).hexdigest()
-        if not fileExists(file.filename, rawFiles):
-            file.seek(0)
-            target_file = os.path.join(rawFiles, file.filename)
-            file.save(target_file)
-            thumbnail = generateThumbnail(file)
-            upload_file(file, rawFiles, thumbnail)
+        if not fileExists(file.filename, path):
+            upload_file(file, path)
             result = {
                 "success": True,
                 "result": file.filename,
@@ -167,10 +171,16 @@ def download(filename):
     return send_from_directory(directory=uploads, filename=filename, as_attachment=True)
 
 
-@app.route('/delete/<filename>')
-def delete(filename):
-    delete_file(filename)
-    return jsonify("Delete file: %s" % filename)
+@app.route('/delete/<fid>')
+def delete(fid):
+    delete_file(fid)
+    return jsonify("Delete file: %s" % fid)
+
+
+@app.route('/newfolder/<path>')
+def newfolder(path):
+    newFolder(path)
+    return jsonify("New folder: %s" % path)
 
 
 @app.route('/browse/', methods=['POST', "PUT", "GET"])
@@ -181,14 +191,28 @@ def browse():
     ###
     path = request.args.get("path")
     print(" [+] path: ", path)
-    res = [{'id': 1, 'pId': 0, 'name': 'root', 'open': True, "type": "folder"},
-           {'id': 101, 'pId': 1, 'name': 'fd111', "type": "folder"},
-           {'id': 201, 'pId': 101, 'name': 'fd2', "type": "folder"}, ]
+    res = []
+    with open(fileList, 'r') as f:
+        datasds = json.load(f)
+        for i in datasds:
+            if i['type'] == 'folder':
+                res.append(i)
+    res = [{'id': '1', 'pId': '0', 'name': 'root', 'open': True, "type": "folder"},
+           {'id': '101', 'pId': '1', 'name': 'fd111', "type": "folder"},
+           {'id': '201', 'pId': '101', 'name': 'fd2', "type": "folder"},
+           {'id': '202', 'pId': '201', 'name': 'fd3', "type": "folder"},
+           {'id': '301', 'pId': '101', 'name': 'fd4', "type": "folder"},
+           {'id': '401', 'pId': '1', 'name': 'fd5', "type": "folder"},
+           {'id': '501', 'pId': '1', 'name': 'fd6', "type": "folder"},
+           {'id': '111', 'pId': '101', 'name': 'fd7', "type": "folder"},
+           {'id': '112', 'pId': '111', 'name': 'fd8', "type": "folder"}]
     return jsonify(res)
 
 # TODO: implement clean schedule for tarsh fold
 # TODO: upload to folders, display folders
 # TODO: rename a file
+# TODO: 列表模式、树结构模式，
+# TODO: 误删恢复：维护另一个tarsh.json，删除与恢复就成为了两个文件互换元素
 
 
 if '__main__' == __name__:

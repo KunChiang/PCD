@@ -177,8 +177,8 @@ webpackJsonp([1], {
                         var treeObj = $("#tree");
                         treeObj = $.fn.zTree.init(treeObj, setting, res.data);
                         zTree_Menu = $.fn.zTree.getZTreeObj("tree");
-                        curMenu = zTree_Menu.getNodes()[0].children[0].children[0];
-                        zTree_Menu.selectNode(curMenu);
+                        // curMenu = zTree_Menu.getNodes()[0].children[0].children[0];
+                        // zTree_Menu.selectNode(curMenu);
                         // treeObj.addClass("showIcon");
 
                         // treeObj.extend.hover(function () {
@@ -192,10 +192,13 @@ webpackJsonp([1], {
                 },
                 __getFullPath: function (nodes) {
                     var path = '/';
+                    var paths = [];
                     for (var i = 0; i < nodes.length; i++) {
-                        path = path + nodes[i].name + '/';
+                        // path = path + nodes[i].name + '/';
+                        paths.push(nodes[i].name)
                     }
-                    return path;
+                    console.log(path, paths);
+                    return path + paths.join('/');
                 },
                 __cutPath: function (path, i = 2) {
                     if (path.length > 24) {
@@ -209,22 +212,31 @@ webpackJsonp([1], {
                     }
                 },
                 add_node: function () {
+                    var e = this;
                     var zTree = $.fn.zTree.getZTreeObj("tree");
                     console.log(zTree);
                     var isParent = zTree.setting.data.isParent,
                         nodes = zTree.getSelectedNodes(),
                         treeNode = nodes[0];
                     if (treeNode) {
-                        treeNode = zTree.addNodes(treeNode, { id: (100 + this.newCount), pId: treeNode.id, isParent: isParent, name: "new node" + (newCount++) });
+                        var new_node_name = "new_node" + (newCount++);
+                        var new_node_path = e.__getFullPath(treeNode.getPath()) + '/' + new_node_name;
+                        e.$axios.get("/newfolder?path=" + new_node_path).then(res => {
+                            console.log(res)
+                            treeNode = zTree.addNodes(treeNode, { id: res.data.md5id, pId: treeNode.id, isParent: isParent, name: new_node_name });
+                            zTree.editName(treeNode[0]);
+                            console.log("新建成功：", treeNode);
+                        })
                     } else {
-                        treeNode = zTree.addNodes(null, { id: (100 + this.newCount), pId: 0, isParent: isParent, name: "new node" + (newCount++) });
+                        console.log("Cannot create root level node");
+                        // console.log("not treeNode");
+                        // treeNode = zTree.addNodes(null, { id: (100 + this.newCount), pId: 0, isParent: isParent, name: "new node" + (newCount++) });
                     }
-                    if (treeNode) {
-                        zTree.editName(treeNode[0]);
-                    } else {
-                        alert("叶子节点被锁定，无法增加子节点");
-                    }
-                    console.log("新建成功：", treeNode)
+                    // if (treeNode) {
+                    //     zTree.editName(treeNode[0]);
+                    // } else {
+                    //     alert("叶子节点被锁定，无法增加子节点");
+                    // }
                 },
                 edit_node: function () {
                     var zTree = $.fn.zTree.getZTreeObj("tree"),

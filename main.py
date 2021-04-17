@@ -177,10 +177,22 @@ def delete(fid):
     return jsonify("Delete file: %s" % fid)
 
 
-@app.route('/newfolder/<path>')
-def newfolder(path):
-    newFolder(path)
-    return jsonify("New folder: %s" % path)
+@app.route('/api/newid/', methods=['GET'])
+def newid():
+    string = request.args.get("string")
+    print("Get id for: ", string)
+    return jsonify({"id": newId(string)})
+
+
+@app.route('/newfolder/', methods=['GET'])
+def newfolder():
+    path = request.args.get("path")
+    print("Create folder:", path)
+    try:
+        newFolder(path)
+        return jsonify({"md5id": newId(path), "created": True})
+    except Exception as e:
+        return jsonify({"created": False, "error": str(e)})
 
 
 @app.route('/browse/', methods=['POST', "PUT", "GET"])
@@ -197,15 +209,15 @@ def browse():
         for i in datasds:
             if i['type'] == 'folder':
                 res.append(i)
-    res = [{'id': '1', 'pId': '0', 'name': 'root', 'open': True, "type": "folder"},
-           {'id': '101', 'pId': '1', 'name': 'fd111', "type": "folder"},
-           {'id': '201', 'pId': '101', 'name': 'fd2', "type": "folder"},
-           {'id': '202', 'pId': '201', 'name': 'fd3', "type": "folder"},
-           {'id': '301', 'pId': '101', 'name': 'fd4', "type": "folder"},
-           {'id': '401', 'pId': '1', 'name': 'fd5', "type": "folder"},
-           {'id': '501', 'pId': '1', 'name': 'fd6', "type": "folder"},
-           {'id': '111', 'pId': '101', 'name': 'fd7', "type": "folder"},
-           {'id': '112', 'pId': '111', 'name': 'fd8', "type": "folder"}]
+    # res = [{'id': '1', 'pId': '0', 'name': 'root', 'open': True, "type": "folder"},
+    #        {'id': '101', 'pId': '1', 'name': 'fd111', "type": "folder"},
+    #        {'id': '201', 'pId': '101', 'name': 'fd2', "type": "folder"},
+    #        {'id': '202', 'pId': '201', 'name': 'fd3', "type": "folder"},
+    #        {'id': '301', 'pId': '101', 'name': 'fd4', "type": "folder"},
+    #        {'id': '401', 'pId': '1', 'name': 'fd5', "type": "folder"},
+    #        {'id': '501', 'pId': '1', 'name': 'fd6', "type": "folder"},
+    #        {'id': '111', 'pId': '101', 'name': 'fd7', "type": "folder"},
+    #        {'id': '112', 'pId': '111', 'name': 'fd8', "type": "folder"}]
     return jsonify(res)
 
 # TODO: implement clean schedule for tarsh fold

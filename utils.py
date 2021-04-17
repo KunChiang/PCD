@@ -136,7 +136,7 @@ def upload_file(file, path, datasource=fileList):
         datasds = json.load(f)
         datasds.append({
             "id": md5Name,
-            "pId": getId("path", path),
+            "pId": getId(path),
             "name": file.filename,
             "type": getFileType(file.filename),
             "path": path,
@@ -148,12 +148,12 @@ def upload_file(file, path, datasource=fileList):
 
 
 def newFolder(path, datasource=fileList):
-    os.mkdir(toRealPath(path))
+    os.mkdirs(toRealPath(path))
     with open(datasource, 'r') as f:
         datasds = json.load(f)
         datasds.append({
             "id": newId(path),
-            "pId": getId("path", "/".join(path.split("/")[:-1])),
+            "pId": getId("/".join(path.split("/")[:-1])),
             "name": path.split("/")[-1],
             "type": "folder",
             "path": "/".join(path.split("/")[:-1]),
@@ -169,17 +169,19 @@ def toRealPath(path):
     return os.path.join(dataPath, "/".join(path.split("/")[1:]))
 
 
-def getId(key, value, datasource=fileList):
+def getId(path, datasource=fileList):
     with open(datasource, 'r') as f:
         datasds = json.load(f)
         for d in datasds:
-            if d[key] == value:
+            if os.path.join(d['path'], d['name']) == path:
+                print("parent is: ", d['name'])
                 return d['id']
-    return newId(value)
+    return newId(path)
 
 
 def newId(string):
     md5 = hashlib.md5()
+    string = string + time.strftime("%Y/%m/%d %H:%M:%S")
     md5.update(string.encode('utf-8'))  # 转码
     res = md5.hexdigest()
     return res

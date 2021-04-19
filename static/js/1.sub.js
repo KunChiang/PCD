@@ -172,7 +172,20 @@ webpackJsonp([1], {
                 browseFolder: function (c) {
                     console.log("BrowseFolder");
                     var e = this;
-                    var res = e.$axios.get("/browse?path=" + c).then(res => {
+                    pushHistory();
+                    window.addEventListener("popstate", function (e) {
+                        $('#selectModel').modal('hide')
+                        console.log("return back");
+                        location.reload();
+                    }, false);
+                    function pushHistory() {
+                        var state = {
+                            title: "title",
+                            url: "#"
+                        };
+                        window.history.pushState(state, "title", "#");
+                    }
+                    e.$axios.get("/browse?path=" + c).then(res => {
                         // console.log(res.data);
                         var treeObj = $("#tree");
                         treeObj = $.fn.zTree.init(treeObj, setting, res.data);

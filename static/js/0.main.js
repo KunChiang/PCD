@@ -1111,7 +1111,19 @@ webpackJsonp([0], {
                     };
                 },
                 created: function () {
-                    this.getlist(this.indexs);
+                    pushHistory();
+                    var a = this;
+                    window.addEventListener("popstate", function (e) {
+                        a.back2last();
+                    }, false);
+                    function pushHistory() {
+                        var state = {
+                            title: "title",
+                            url: "#"
+                        };
+                        window.history.pushState(state, "title", "#");
+                    }
+                    a.getlist(a.indexs);
                 },
                 methods: {
                     getlist: function (t) {
@@ -1243,13 +1255,15 @@ webpackJsonp([0], {
                         if (p == '/') return true;
                         else return false;
                     },
-                    "back": function () {
-                        var path = this.currpath;
+                    back2last: function () {
+                        var t = this;
+                        var path = t.currpath;
                         var sub = path.split('/').slice(0, -1).join('/');
-                        this.currpath = sub ? sub : '/'
-                        this.indexs = 0;
-                        this.namels = [];
-                        this.getlist(this.indexs);
+                        t.currpath = sub ? sub : '/'
+                        console.log("Back to: " + sub)
+                        t.indexs = 0;
+                        t.namels = [];
+                        t.getlist(t.indexs);
                     }
                 },
             },
@@ -1279,7 +1293,7 @@ webpackJsonp([0], {
                                             icon: "el-icon-caret-left",
                                             disabled: this.__isRoot(this.currpath) ? true : false,
                                         },
-                                        on: { click: t.back },
+                                        on: { click: t.back2last },
                                     },
                                     [t._v(t._s("上一层"))]
                                 ),

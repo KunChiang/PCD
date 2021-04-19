@@ -242,14 +242,8 @@ webpackJsonp([1], {
                         })
                     } else {
                         console.log("Cannot create root level node");
-                        // console.log("not treeNode");
-                        // treeNode = zTree.addNodes(null, { id: (100 + this.newCount), pId: 0, isParent: isParent, name: "new node" + (newCount++) });
+                        alert("Cannot create root level node")
                     }
-                    // if (treeNode) {
-                    //     zTree.editName(treeNode[0]);
-                    // } else {
-                    //     alert("叶子节点被锁定，无法增加子节点");
-                    // }
                 },
                 edit_node: function () {
                     var zTree = $.fn.zTree.getZTreeObj("tree"),

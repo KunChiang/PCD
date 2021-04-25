@@ -140,6 +140,7 @@ def tclist():
                     "type": ix["type"],
                     "down": ix["name"],
                     "path": ix["path"],
+                    "size": ix["size"],
                 }
             )
         return jsonify(sdwewqrt)
@@ -189,10 +190,17 @@ def newfolder():
     path = request.args.get("path")
     print("Create folder:", path)
     try:
-        newFolder(path)
+        # newFolder(path)
         return jsonify({"md5id": newId(path), "created": True})
     except Exception as e:
         return jsonify({"created": False, "error": str(e)})
+
+
+@app.route('/update/', methods=['POST'])
+def update():
+    folders = requests.args.getlist("tree")
+    print(folders)
+    return jsonify("update tree")
 
 
 @app.route('/browse/', methods=['POST', "PUT", "GET"])
@@ -219,12 +227,6 @@ def browse():
     #        {'id': '111', 'pId': '101', 'name': 'fd7', "type": "folder"},
     #        {'id': '112', 'pId': '111', 'name': 'fd8', "type": "folder"}]
     return jsonify(res)
-
-# TODO: implement clean schedule for tarsh fold
-# TODO: upload to folders, display folders
-# TODO: rename a file
-# TODO: 列表模式、树结构模式，
-# TODO: 误删恢复：维护另一个tarsh.json，删除与恢复就成为了两个文件互换元素
 
 
 if '__main__' == __name__:

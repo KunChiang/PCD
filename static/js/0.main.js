@@ -1264,6 +1264,21 @@ webpackJsonp([0], {
                         t.indexs = 0;
                         t.namels = [];
                         t.getlist(t.indexs);
+                    },
+                    formatSize: function (a) {
+                        var res = a;
+                        if (res < 1024) {
+                            return res + 'B';
+                        } else if (1024 < res < 1024 * 1024) {
+                            res = res / 1024
+                            return res.toFixed(2) + 'KB'
+                        } else if (1024 * 1024 < res < 1024 * 1024 * 1024) {
+                            res = res / 1024
+                            return res.toFixed(2) + 'MB'
+                        } if (1024 * 1024 * 1024 < res < 1024 * 1024 * 1024 * 1024) {
+                            res = res / 1024
+                            return res.toFixed(2) + 'GB'
+                        }
                     }
                 },
             },
@@ -1325,7 +1340,16 @@ webpackJsonp([0], {
                                                             attrs: { slot: "header" },
                                                             slot: "header",
                                                         },
-                                                        [n("span", [t._v(t._s(e.name))])]
+                                                        [
+                                                            n("span", [t._v(t._s(e.name))]),
+                                                            n(
+                                                                "span",
+                                                                {
+                                                                    staticStyle: { "font-size": "14px", "float": "right" },
+                                                                },
+                                                                [t._v(t.formatSize(e.size))]
+                                                            ),
+                                                        ]
                                                     ),
                                                     n(
                                                         "div",
@@ -1356,8 +1380,8 @@ webpackJsonp([0], {
                                                         [
                                                             n("el-image", {
                                                                 staticStyle: {
-                                                                    width: "64px",
-                                                                    height: "64px",
+                                                                    width: "48px",
+                                                                    height: "48px",
                                                                     "border-radius": "4px",
                                                                 },
                                                                 attrs: {

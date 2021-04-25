@@ -33,6 +33,7 @@ def init():
             "name": "root",
             "type": "folder",
             "path": "/",
+            "size": 0,
             "_realPath": rawFiles,
             "thumbnail": "icon/folder.png",
             "date": time.strftime("%Y/%m/%d %H:%M:%S"),
@@ -124,6 +125,13 @@ def delete_file(fid, datasource=fileList):
             json.dump(datasds, f)
 
 
+def __updateSizes(add, data):
+    pid = add['pId']
+    for d in data:
+        if d['id'] == pid and d['type'] == 'folder':
+            d['size'] += add['size']
+
+
 def upload_file(file, path, datasource=fileList):
     print("[+] upload file: ", file.filename)
     md5Name = newId(os.path.join(path, file.filename))
@@ -134,15 +142,18 @@ def upload_file(file, path, datasource=fileList):
     thumbnail = generateThumbnail(file, md5Name)
     with open(datasource, 'r') as f:
         datasds = json.load(f)
-        datasds.append({
+        add = {
             "id": md5Name,
             "pId": getId(path),
             "name": file.filename,
             "type": getFileType(file.filename),
             "path": path,
+            "size": os.stat(target_file).st_size,
             "_realPath": toRealPath(path),
             "thumbnail": thumbnail,
-            "date": time.strftime("%Y/%m/%d %H:%M:%S")})
+            "date": time.strftime("%Y/%m/%d %H:%M:%S")}
+        datasds.append(add)
+        __updateSizes(add, datasds)
         with open(datasource, 'w') as f:
             json.dump(datasds, f)
 
@@ -157,6 +168,7 @@ def newFolder(path, datasource=fileList):
             "name": path.split("/")[-1],
             "type": "folder",
             "path": "/".join(path.split("/")[:-1]),
+            "size": 0,
             "_realPath": toRealPath("/".join(path.split("/")[:-1])),
             "thumbnail": "icon/folder.png",
             "date": time.strftime("%Y/%m/%d %H:%M:%S")})

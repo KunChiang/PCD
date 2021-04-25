@@ -85,57 +85,6 @@ webpackJsonp([1], {
                 ms = now.getMilliseconds();
             return (h + ":" + m + ":" + s + " " + ms);
         }
-
-        var newCount = 1;
-        function add(e) {
-            console.log(e);
-            var zTree = $.fn.zTree.getZTreeObj("tree");
-            console.log(zTree);
-            var isParent = e.data.isParent,
-                nodes = zTree.getSelectedNodes(),
-                treeNode = nodes[0];
-            if (treeNode) {
-                treeNode = zTree.addNodes(treeNode, { id: (100 + newCount), pId: treeNode.id, isParent: isParent, name: "new node" + (newCount++) });
-            } else {
-                treeNode = zTree.addNodes(null, { id: (100 + newCount), pId: 0, isParent: isParent, name: "new node" + (newCount++) });
-            }
-            if (treeNode) {
-                zTree.editName(treeNode[0]);
-            } else {
-                alert("叶子节点被锁定，无法增加子节点");
-            }
-        };
-        function edit() {
-            var zTree = $.fn.zTree.getZTreeObj("tree"),
-                nodes = zTree.getSelectedNodes(),
-                treeNode = nodes[0];
-            if (nodes.length == 0) {
-                alert("请先选择一个节点");
-                return;
-            }
-            zTree.editName(treeNode);
-        };
-        function remove(e) {
-            var zTree = $.fn.zTree.getZTreeObj("tree"),
-                nodes = zTree.getSelectedNodes(),
-                treeNode = nodes[0];
-            if (nodes.length == 0) {
-                alert("请先选择一个节点");
-                return;
-            }
-            var callbackFlag = $("#callbackTrigger").attr("checked");
-            zTree.removeNode(treeNode, callbackFlag);
-        };
-        function clearChildren(e) {
-            var zTree = $.fn.zTree.getZTreeObj("tree"),
-                nodes = zTree.getSelectedNodes(),
-                treeNode = nodes[0];
-            if (nodes.length == 0 || !nodes[0].isParent) {
-                alert("请先选择一个父节点");
-                return;
-            }
-            zTree.removeChildNodes(treeNode);
-        };
         var n = {
             name: "upload",
             data: function () {
@@ -147,6 +96,7 @@ webpackJsonp([1], {
                         "/uploads",
                     currpath: "/root",
                     newCount: 1,
+                    treeData: [],
                 };
             },
             methods: {
@@ -188,11 +138,11 @@ webpackJsonp([1], {
                     e.$axios.get("/browse?path=" + c).then(res => {
                         // console.log(res.data);
                         var treeObj = $("#tree");
-                        treeObj = $.fn.zTree.init(treeObj, setting, res.data);
-                        zTree_Menu = $.fn.zTree.getZTreeObj("tree");
+                        e.treeData = res.data
+                        treeObj = $.fn.zTree.init(treeObj, setting, e.treeData);
+                        // zTree_Menu = $.fn.zTree.getZTreeObj("tree");
                         // curMenu = zTree_Menu.getNodes()[0].children[0].children[0];
                         // zTree_Menu.selectNode(curMenu);
-                        // treeObj.addClass("showIcon");
 
                         // treeObj.extend.hover(function () {
                         //     if (!treeObj.hasClass("showIcon")) {
@@ -224,6 +174,18 @@ webpackJsonp([1], {
                         return path
                     }
                 },
+                __checkNodeExists: function () {
+                    // check node name already exists
+                    var e = this;
+                    var zTree = $.fn.zTree.getZTreeObj("tree");
+                    var node = zTree.getNodesByParam("name", "new_node" + e.newCount, null);
+                    if (node.length != 0) {
+                        e.newCount += 1;
+                        return e.__checkNodeExists();
+                    } else {
+                        return "new_node" + e.newCount
+                    }
+                },
                 add_node: function () {
                     var e = this;
                     var zTree = $.fn.zTree.getZTreeObj("tree");
@@ -232,28 +194,37 @@ webpackJsonp([1], {
                         nodes = zTree.getSelectedNodes(),
                         treeNode = nodes[0];
                     if (treeNode) {
-                        var new_node_name = "new_node" + (newCount++);
+                        var new_node_name = e.__checkNodeExists();
                         var new_node_path = e.__getFullPath(treeNode.getPath()) + '/' + new_node_name;
-                        e.$axios.get("/newfolder?path=" + new_node_path).then(res => {
-                            console.log(res)
-                            treeNode = zTree.addNodes(treeNode, { id: res.data.md5id, pId: treeNode.id, isParent: isParent, name: new_node_name });
-                            zTree.editName(treeNode[0]);
-                            console.log("新建成功：", treeNode);
-                        })
+                        treeNode = zTree.addNodes(treeNode, { id: new_node_path, pId: treeNode.id, isParent: isParent, name: new_node_name });
+                        zTree.editName(treeNode[0]);
+                        console.log("新建成功：", treeNode[0]);
+                        e.treeData.push(treeNode[0])
+                        console.log("global node data: ", e.treeData);
+                        // e.$axios.get("/newfolder?path=" + new_node_path).then(res => {
+                        //     console.log(res)
+                        //     treeNode = zTree.addNodes(treeNode, { id: res.data.md5id, pId: treeNode.id, isParent: isParent, name: new_node_name });
+                        //     zTree.editName(treeNode[0]);
+                        //     console.log("新建成功：", treeNode);
+                        // })
                     } else {
                         console.log("Cannot create root level node");
-                        alert("Cannot create root level node")
+                        alert("请选择目录！")
                     }
                 },
                 edit_node: function () {
                     var zTree = $.fn.zTree.getZTreeObj("tree"),
                         nodes = zTree.getSelectedNodes(),
                         treeNode = nodes[0];
-                    if (nodes.length == 0) {
-                        alert("请先选择一个节点");
+                    if (nodes.length <= 0) {
+                        alert("请先选择一个节点！");
                         return;
+                    } else if (treeNode.level == 0) {
+                        alert("根目录无法修改！");
+                    } else {
+                        // console.log(treeNode)
+                        zTree.editName(treeNode);
                     }
-                    zTree.editName(treeNode);
                 },
                 remove_node: function () {
                     var zTree = $.fn.zTree.getZTreeObj("tree"),
@@ -263,15 +234,30 @@ webpackJsonp([1], {
                         alert("请先选择一个节点");
                         return;
                     }
-                    var r = confirm("确定要删除文件：" + t + " 吗？？");
-                    if (r) {
-                        var callbackFlag = $("#callbackTrigger").attr("checked");
-                        zTree.removeNode(treeNode, callbackFlag);
+                    else if (treeNode.level == 0) {
+                        alert("根目录无法删除！");
                     } else {
-                        console.log("取消删除");
+                        var r = confirm("确定要删除文件：" + t + " 吗？？");
+                        if (r) {
+                            var callbackFlag = $("#callbackTrigger").attr("checked");
+                            zTree.removeNode(treeNode, callbackFlag);
+                        } else {
+                            console.log("取消删除");
+                        }
                     }
                 },
+                __updateTree: function () {
+                    // 按照当前节点的状态更新数据库
+                    var treeObj = $.fn.zTree.getZTreeObj("tree");
+                    var nodes = treeObj.getNodes();
+                    console.log("update folder tree", nodes[0].children);
+                    // var e = this;
+                    // e.$axios.post("/update?tree=" + nodes[0].children).then(res => {
+                    //     consoles.log(res)
+                    // })
+                },
                 getSelect: function () {
+                    this.__updateTree();
                     var treeObj = $.fn.zTree.getZTreeObj("tree");
                     var nodes = treeObj.getSelectedNodes();
                     if (nodes.length > 0) {

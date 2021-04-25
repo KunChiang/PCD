@@ -1,51 +1,26 @@
 # PCD
 
-存储数据结构
+## TODOs
 
-```json
-{
-    "root": {
-        "name": "",//当前文件或文件夹的名称
-        "path": "",//当前文件或文件夹的实际存储路径
-        "type": "folder",
-        "date": "2021/03/26 18:20:55",
-        "thumbnail": "icon/folder.png",
-        "children":[
-            {
-                "name": "Kareo API Guide.pdf",
-                "path": "",
-                "thumbnail": "icon/pdf.png",
-                "type": "pdf",
-                "date": "2021/03/26 18:20:55"
-            },
-            {
-                "name": "123",
-                "path": "",
-                "type": "folder",
-                "date": "2021/03/26 18:20:55",
-                "thumbnail": "icon/folder.png",
-                "children":
-                [
-                    "file_id2": {},
-                    "fold_id2": {},
-                    ...
-                ]
-            }
-        ]
-    }
-}
-```
+Recent work:
 
-with folder树：
+- [x] upload to folders, display folders
+- [ ] 修改界面展示形式，删除独立的上传页面，只保留列表页面
+  - [ ] 添加按钮：
+    - [ ] 新建文件夹
+    - [ ] 上传文件至当前目录
+    - [ ] 批量删除
+  - [ ] 上传页面功能迁移至上传按钮，不弹出独立页面，考虑浮窗形式弹出进度条
+- [ ] 新增filesize，同步更新folder size
 
-```json
-[
-  { "id": "", "pid": "", "name": "" },
-  { "id": "", "pid": "", "name": "" }
-]
-```
+Future work:
 
-OR 数据结构：
+- [ ] 误删恢复：维护另一个tarsh.json，删除与恢复就成为了两个文件互换元素，检查文件在trash中存在的时长，定时清理
+- [ ] 列表页面的展示模式：列表模式、卡片模式可切换
+
+## 存储数据结构
+
+filelist.json/MySQL:
 
 ```json
 [
@@ -55,6 +30,7 @@ OR 数据结构：
         "name": "root",
         "type": "folder",
         "path": "/path/",
+        "size": 1111, //(sum of all children)
         "thumbnail": "icon/folder.png",
         "date": "2021/03/26 18:20:55",
     },
@@ -64,6 +40,7 @@ OR 数据结构：
         "name": "Kareo API Guide.pdf",
         "type": "pdf",
         "path": "",
+        "size": 123,
         "thumbnail": "icon/pdf.png",
         "date": "2021/03/26 18:20:55"
     },
@@ -73,8 +50,10 @@ OR 数据结构：
         "name": "123",
         "type": "folder",
         "path": "",
+        "size": 1111, //(sum of all children)
         "thumbnail": "icon/folder.png",
         "date": "2021/03/26 18:20:55",
     },
 ]
 ```
+

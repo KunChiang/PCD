@@ -1101,6 +1101,11 @@ webpackJsonp([0], {
                         currpath: '/',
                         disbxas: !1,
                         loadingx: !1,
+                        upurl:
+                            window.location.protocol +
+                            "//" +
+                            window.location.host +
+                            "/uploads",
                         imurlqz:
                             window.location.protocol + "//" + window.location.host + "/icon/",
                         downlinkx:
@@ -1267,18 +1272,50 @@ webpackJsonp([0], {
                     },
                     formatSize: function (a) {
                         var res = a;
-                        if (res < 1024) {
-                            return res + 'B';
-                        } else if (1024 < res < 1024 * 1024) {
-                            res = res / 1024
-                            return res.toFixed(2) + 'KB'
-                        } else if (1024 * 1024 < res < 1024 * 1024 * 1024) {
-                            res = res / 1024
-                            return res.toFixed(2) + 'MB'
-                        } if (1024 * 1024 * 1024 < res < 1024 * 1024 * 1024 * 1024) {
-                            res = res / 1024
-                            return res.toFixed(2) + 'GB'
+                        var units = [' B', ' KB', ' MB', ' GB', ' TB']
+                        var i = 0;
+                        while (res / 1024 > 1) {
+                            // console.log(res);
+                            i += 1;
+                            res = res / 1024;
                         }
+                        return res.toFixed(2) + units[i]
+                    },
+                    weqewqq2: function (t, e, o) {
+                        console.log(o);
+                    },
+                    weqweqeq: function (t) {
+                        if (t.status === "success") {
+                            window.open(
+                                window.location.protocol +
+                                "//" +
+                                window.location.host +
+                                "/tc/" +
+                                t.name
+                            );
+                        } else {
+                            this.$notify.error({
+                                title: "错误",
+                                message: "上传失败，请重试！",
+                            });
+                        }
+                    },
+                    uploadfile: function (t) {
+                        // console.log("upload");
+                        // var e = this;
+                        pushHistory();
+                        window.addEventListener("popstate", function (e) {
+                            $('#uploadModel').modal('hide')
+                            console.log("return back");
+                        }, false);
+                        function pushHistory() {
+                            var state = {
+                                title: "title",
+                                url: "#"
+                            };
+                            window.history.pushState(state, "title", "#");
+                        }
+
                     }
                 },
             },
@@ -1292,26 +1329,146 @@ webpackJsonp([0], {
                         { attrs: { gutter: 32 } },
                         [
                             n("el-col", { attrs: { span: 24 } },
-                                [n(
-                                    "span",
-                                    {
-                                        staticStyle: { "font-size": "14px", "line-height": "30px" },
-                                    },
-                                    [this._v(" 当前路径: " + this.currpath)]
-                                ),
-                                n(
-                                    "el-button",
-                                    {
-                                        staticStyle: { "padding-left": "revert", "float": "right" },
-                                        attrs: {
-                                            size: "small",
-                                            icon: "el-icon-caret-left",
-                                            disabled: this.__isRoot(this.currpath) ? true : false,
+                                [
+                                    n(
+                                        "el-button",
+                                        {
+                                            staticStyle: { "padding-left": "revert", "float": "left", "width": "25px", "margin-right": "2px" },
+                                            attrs: {
+                                                size: "small",
+                                                icon: "el-icon-caret-left",
+                                                disabled: this.__isRoot(this.currpath) ? true : false,
+                                            },
+                                            on: { click: t.back2last },
                                         },
-                                        on: { click: t.back2last },
+                                        [t._v(t._s(""))]
+                                    ),
+                                    n(
+                                        "span",
+                                        {
+                                            staticStyle: { "font-size": "14px", "line-height": "30px" },
+                                        },
+                                        [this._v(" 当前路径: " + this.currpath)]
+                                    ),
+                                    n(
+                                        "el-button",
+                                        {
+                                            staticStyle: { "padding-left": "revert", "float": "right", "width": "25px", "margin-left": "2px" },
+                                            attrs: {
+                                                size: "small",
+                                                icon: "el-icon-delete",
+                                                // disabled: this.__isRoot(this.currpath) ? true : false,
+                                            },
+                                            // on: { click: t.back2last },
+                                        },
+                                        [t._v(t._s(""))]
+                                    ),
+                                    n(
+                                        "el-button",
+                                        {
+                                            staticStyle: { "padding-left": "revert", "float": "right", "width": "25px", "margin-left": "2px" },
+                                            attrs: {
+                                                size: "small",
+                                                icon: "el-icon-upload",
+                                                "data-toggle": "modal",
+                                                "data-target": "#uploadModel",
+                                                // disabled: this.__isRoot(this.currpath) ? true : false,
+                                            },
+                                            on: { click: t.uploadfile() },
+                                        },
+                                        [t._v(t._s(""))]
+                                    ),
+                                    n(
+                                        "el-button",
+                                        {
+                                            staticStyle: { "padding-left": "revert", "float": "right", "width": "25px", "margin-left": "2px" },
+                                            attrs: {
+                                                size: "small",
+                                                icon: "el-icon-folder-add",
+                                                // disabled: this.__isRoot(this.currpath) ? true : false,
+                                            },
+                                            // on: { click: t.back2last },
+                                        },
+                                        [t._v(t._s(""))]
+                                    ),
+                                    n("div", {
+                                        attrs: {
+                                            class: "modal fade",
+                                            id: "uploadModel",
+                                            tabindex: "-1",
+                                            role: "dialog",
+                                            "aria-labelledby": "exampleModalLabel",
+                                            "aria-hidden": "true",
+                                        },
                                     },
-                                    [t._v(t._s("上一层"))]
-                                ),
+                                        [n("div", {
+                                            class: "modal-dialog modal-dialog-centered",
+                                            attrs: {
+                                                "role": "document"
+                                            }
+                                        },
+                                            [n("div", {
+                                                class: "modal-content",
+                                            },
+                                                [n("div", {
+                                                    class: "modal-header",
+                                                },
+                                                    [n("h5", {
+                                                        class: "modal-title",
+                                                        attrs: {
+                                                            id: "exampleModalLabel"
+                                                        }
+                                                    }, [t._v(t._s("上传文件"))]),
+                                                    ]),
+                                                n("div", {
+                                                    class: "modal-body"
+                                                },
+                                                    [
+                                                        n(
+                                                            "el-upload",
+                                                            {
+                                                                attrs: {
+                                                                    drag: "",
+                                                                    action: this.upurl + "/?path=" + t.currpath,
+                                                                    "on-success": this.weqewqq2,
+                                                                    "on-preview": this.weqweqeq,
+                                                                    multiple: "",
+                                                                },
+                                                            },
+                                                            [
+                                                                n("i", {
+                                                                    staticClass: "el-icon-upload",
+                                                                }),
+                                                                this._v(" "),
+                                                                n("div", { staticClass: "el-upload__text" }, [
+                                                                    this._v("\n    将文件拖到此处，或\n    "),
+                                                                    n("em", [this._v("点击上传")]),
+                                                                ]),
+                                                            ]
+                                                        ),
+                                                    ]
+                                                ),
+                                                n("div", {
+                                                    class: "modal-footer",
+                                                },
+                                                    [n("el-button", {
+                                                        staticStyle: { "background": "#409eff", "color": "#fff" },
+                                                        attrs: {
+                                                            "data-dismiss": "modal",
+                                                        }
+                                                    }, [t._v(t._s("关闭"))]),
+                                                    n("el-button", {
+                                                        staticStyle: { "background": "#409eff", "color": "#fff" },
+                                                        attrs: {
+                                                            "data-dismiss": "modal",
+                                                        },
+                                                    }, [t._v(t._s("确定"))])],
+                                                )
+
+                                                ]
+                                            )]
+                                        )]
+                                    ),
                                 ]
                             ),
                             n(

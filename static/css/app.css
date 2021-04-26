@@ -9845,13 +9845,13 @@
 }
 
 .el-card__header {
-  padding: 18px 20px;
+  padding: 12px 12px;
   border-bottom: 1px solid #ebeef5;
   box-sizing: border-box;
 }
 
 .el-card__body {
-  padding: 20px;
+  padding: 10px;
 }
 
 .el-rate {
@@ -14192,7 +14192,7 @@
     padding: 0 30px;
   }
   .el-footer {
-    margin-top: 30px;
+    margin-top: 18px;
   }
   .swewq {
     font-size: 14px;
@@ -14218,7 +14218,7 @@
 }
 
 .el-header {
-  line-height: 118px;
+  line-height: 80px;
 }
 
 .el-footer {
@@ -14250,7 +14250,7 @@
 }
 
 .el-main {
-  min-height: calc(100vh - 260px);
+  min-height: calc(100vh - 200px);
   padding: 0;
   overflow: hidden;
 }
@@ -14280,7 +14280,7 @@
 }
 
 .el-col {
-  margin-top: 20px;
+  margin-top: 15px;
 }
 
 .list-item {
@@ -14318,7 +14318,7 @@
 .select_wrap {
   width: 800px;
   margin: 10px auto;
-  float: left
+  float: left;
 }
 
 .select_wrap dt {
@@ -14418,7 +14418,7 @@
   border-radius: 50%;
   position: fixed;
   right: 5%;
-  top: 80%;
+  top: 81.5%;
   z-index: 4;
   width: 40px;
   height: 40px;

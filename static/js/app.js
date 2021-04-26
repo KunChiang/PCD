@@ -56,7 +56,7 @@ webpackJsonp(
                                     n(
                                         "el-container",
                                         [
-                                            n("el-header", { attrs: { height: "120px" } }, [
+                                            n("el-header", { attrs: { height: "80px" } }, [
                                                 n(
                                                     "h1",
                                                     {
@@ -67,36 +67,37 @@ webpackJsonp(
                                                             "font-weight": "normal",
                                                             float: "left",
                                                         },
+                                                        attrs: { to: "/" }
                                                     },
                                                     [t._v(t._s(t.upurl))]
                                                 ),
-                                                t._v(" "),
-                                                n(
-                                                    "div",
-                                                    {
-                                                        staticStyle: { float: "right" },
-                                                    },
-                                                    [
-                                                        n(
-                                                            "router-link",
-                                                            {
-                                                                staticClass: "swewq",
-                                                                attrs: { to: "/" },
-                                                            },
-                                                            [t._v("列表")]
-                                                        ),
-                                                        t._v(" "),
-                                                        n(
-                                                            "router-link",
-                                                            {
-                                                                staticClass: "swewq",
-                                                                attrs: { to: "/upload" },
-                                                            },
-                                                            [t._v("上传")]
-                                                        ),
-                                                    ],
-                                                    1
-                                                ),
+                                                // t._v(" "),
+                                                // n(
+                                                //     "div",
+                                                //     {
+                                                //         staticStyle: { float: "right" },
+                                                //     },
+                                                //     [
+                                                //         n(
+                                                //             "router-link",
+                                                //             {
+                                                //                 staticClass: "swewq",
+                                                //                 attrs: { to: "/" },
+                                                //             },
+                                                //             [t._v("列表")]
+                                                //         ),
+                                                //         t._v(" "),
+                                                //         n(
+                                                //             "router-link",
+                                                //             {
+                                                //                 staticClass: "swewq",
+                                                //                 attrs: { to: "/upload" },
+                                                //             },
+                                                //             [t._v("上传")]
+                                                //         ),
+                                                //     ],
+                                                //     1
+                                                // ),
                                             ]),
                                             t._v(" "),
                                             n("el-main", [n("router-view")], 1),

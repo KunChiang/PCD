@@ -67,7 +67,6 @@ webpackJsonp(
                                                             "font-weight": "normal",
                                                             float: "left",
                                                         },
-                                                        attrs: { to: "/" }
                                                     },
                                                     [t._v(t._s(t.upurl))]
                                                 ),

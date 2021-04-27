@@ -1087,7 +1087,7 @@ webpackJsonp([0], {
         //         this.splice(index, 1);
         //     }
         // };
-        Object.defineProperty(e, "__esModule", { value: !0 });
+        Object.defineProperty(e, "__esModule", { value: 1 });
         var r = n("Xxa5"),
             o = n.n(r),
             i = n("exGp"),
@@ -1300,8 +1300,8 @@ webpackJsonp([0], {
                             });
                         }
                     },
-                    uploadfile: function (t) {
-                        // console.log("upload");
+                    uploadfile: function () {
+                        console.log("upload");
                         // var e = this;
                         pushHistory();
                         window.addEventListener("popstate", function (e) {
@@ -1316,6 +1316,17 @@ webpackJsonp([0], {
                             window.history.pushState(state, "title", "#");
                         }
 
+                    },
+                    __newfolder: function () {
+                        console.log("new folder");
+                        var e = this;
+                        var a = window.prompt('请输入文件夹名称', '请输入文件夹名称', {
+                            confirmButtonText: '确定',
+                            cancelButtonText: '取消',
+                            inputPattern: /[\w!#$%&'*+/=?^_`{|}~-]+(?:\.[\w!#$%&'*+/=?^_`{|}~-]+)*@(?:[\w](?:[\w-]*[\w])?\.)+[\w](?:[\w-]*[\w])?/,
+                            inputErrorMessage: '文件夹名称不正确'
+                        })
+                        console.log(a)
                     }
                 },
             },
@@ -1333,7 +1344,7 @@ webpackJsonp([0], {
                                     n(
                                         "el-button",
                                         {
-                                            staticStyle: { "padding-left": "revert", "float": "left", "width": "25px", "margin-right": "2px" },
+                                            staticStyle: { "padding-left": "revert", "float": "left", "width": "25px", "margin-right": "10px" },
                                             attrs: {
                                                 size: "small",
                                                 icon: "el-icon-caret-left",
@@ -1348,7 +1359,7 @@ webpackJsonp([0], {
                                         {
                                             staticStyle: { "font-size": "14px", "line-height": "30px" },
                                         },
-                                        [this._v(" 当前路径: " + this.currpath)]
+                                        [this._v("当前:" + this.currpath)]
                                     ),
                                     n(
                                         "el-button",
@@ -1374,7 +1385,7 @@ webpackJsonp([0], {
                                                 "data-target": "#uploadModel",
                                                 // disabled: this.__isRoot(this.currpath) ? true : false,
                                             },
-                                            on: { click: t.uploadfile() },
+                                            on: { click: t.uploadfile },
                                         },
                                         [t._v(t._s(""))]
                                     ),
@@ -1387,7 +1398,7 @@ webpackJsonp([0], {
                                                 icon: "el-icon-folder-add",
                                                 // disabled: this.__isRoot(this.currpath) ? true : false,
                                             },
-                                            // on: { click: t.back2last },
+                                            on: { click: t.__newfolder },
                                         },
                                         [t._v(t._s(""))]
                                     ),

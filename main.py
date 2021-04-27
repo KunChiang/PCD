@@ -217,15 +217,6 @@ def browse():
         for i in datasds:
             if i['type'] == 'folder':
                 res.append(i)
-    # res = [{'id': '1', 'pId': '0', 'name': 'root', 'open': True, "type": "folder"},
-    #        {'id': '101', 'pId': '1', 'name': 'fd111', "type": "folder"},
-    #        {'id': '201', 'pId': '101', 'name': 'fd2', "type": "folder"},
-    #        {'id': '202', 'pId': '201', 'name': 'fd3', "type": "folder"},
-    #        {'id': '301', 'pId': '101', 'name': 'fd4', "type": "folder"},
-    #        {'id': '401', 'pId': '1', 'name': 'fd5', "type": "folder"},
-    #        {'id': '501', 'pId': '1', 'name': 'fd6', "type": "folder"},
-    #        {'id': '111', 'pId': '101', 'name': 'fd7', "type": "folder"},
-    #        {'id': '112', 'pId': '111', 'name': 'fd8', "type": "folder"}]
     return jsonify(res)
 
 

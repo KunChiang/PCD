@@ -159,10 +159,11 @@ def upload_file(file, path, datasource=fileList):
 
 
 def newFolder(path, datasource=fileList):
-    os.mkdirs(toRealPath(path))
+    os.mkdir(toRealPath(path))
+    d = {}
     with open(datasource, 'r') as f:
         datasds = json.load(f)
-        datasds.append({
+        d = {
             "id": newId(path),
             "pId": getId("/".join(path.split("/")[:-1])),
             "name": path.split("/")[-1],
@@ -171,13 +172,15 @@ def newFolder(path, datasource=fileList):
             "size": 0,
             "_realPath": toRealPath("/".join(path.split("/")[:-1])),
             "thumbnail": "icon/folder.png",
-            "date": time.strftime("%Y/%m/%d %H:%M:%S")})
+            "date": time.strftime("%Y/%m/%d %H:%M:%S")}
+        datasds.append(d)
         with open(datasource, 'w') as f:
             json.dump(datasds, f)
+    return d
 
 
 def toRealPath(path):
-    print(dataPath, "/".join(path.split("/")[1:]))
+    # print(dataPath, "/".join(path.split("/")[1:]))
     return os.path.join(dataPath, "/".join(path.split("/")[1:]))
 
 

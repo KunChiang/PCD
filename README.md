@@ -13,6 +13,7 @@ Recent work:
   - [x] 上传页面功能迁移至上传按钮，不弹出独立页面，考虑浮窗形式弹出进度条
 - [x] 新增filesize，同步更新folder size
 - [ ] 排序：类型、文件名、上传时间
+- [ ] 显示上传速度
 
 Future work:
 

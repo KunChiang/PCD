@@ -1141,15 +1141,11 @@ webpackJsonp([0], {
                                         for (; ;)
                                             switch ((n.prev = n.next)) {
                                                 case 0:
-                                                    return (
-                                                        (n.next = 2),
-                                                        e.$axios.get("/tclist?limit=12&offset=" + 12 * t + "&path=" + this.currpath)
-                                                    );
+                                                    return n.next = 2, e.$axios.get("/tclist?limit=12&offset=" + 12 * t + "&path=" + this.currpath);
                                                 case 2:
-                                                    (r = (r = n.sent).data).length < 12 &&
-                                                        (e.disbxas = !0),
-                                                        (e.namels = e.namels.concat(r)),
-                                                        (e.indexs += 1);
+                                                    // console.log("[1]: ", e.disbxas, (r = (r = n.sent).data).length);
+                                                    (r = (r = n.sent).data).length < 24 && (e.disbxas = !0), e.namels = e.namels.concat(r), e.indexs += 1;
+                                                // console.log("[2]: ", e.disbxas);
                                                 case 7:
                                                 case "end":
                                                     return n.stop();
@@ -1281,10 +1277,14 @@ webpackJsonp([0], {
                         }
                         return res.toFixed(2) + units[i]
                     },
-                    weqewqq2: function (t, e, o) {
-                        console.log(o);
+                    upload_success: function (t, e, o) {
+                        console.log("upload success: ", t);
+                        var a = this;
+                        a.indexs = 0;
+                        a.namels = [];
+                        a.getlist(a.indexs);
                     },
-                    weqweqeq: function (t) {
+                    upload_preview: function (t) {
                         if (t.status === "success") {
                             window.open(
                                 window.location.protocol +
@@ -1320,13 +1320,18 @@ webpackJsonp([0], {
                     __newfolder: function () {
                         console.log("new folder");
                         var e = this;
-                        var a = window.prompt('请输入文件夹名称', '请输入文件夹名称', {
+                        var a = prompt('新建文件夹', '请输入文件夹名称', {
                             confirmButtonText: '确定',
                             cancelButtonText: '取消',
                             inputPattern: /[\w!#$%&'*+/=?^_`{|}~-]+(?:\.[\w!#$%&'*+/=?^_`{|}~-]+)*@(?:[\w](?:[\w-]*[\w])?\.)+[\w](?:[\w-]*[\w])?/,
                             inputErrorMessage: '文件夹名称不正确'
                         })
-                        console.log(a)
+                        e.$axios.post('/newfolder/?path=' + e.currpath + '/' + a).then(response => {
+                            console.log(response);
+                            e.indexs = 0;
+                            e.namels = [];
+                            e.getlist(e.indexs);
+                        })
                     }
                 },
             },
@@ -1337,22 +1342,33 @@ webpackJsonp([0], {
                         n = t._self._c || e;
                     return n(
                         "el-row",
-                        { attrs: { gutter: 32 } },
+                        { attrs: { gutter: 10 } },
                         [
                             n("el-col", { attrs: { span: 24 } },
                                 [
                                     n(
-                                        "el-button",
+                                        "el-tooltip",
                                         {
-                                            staticStyle: { "padding-left": "revert", "float": "left", "width": "25px", "margin-right": "10px" },
                                             attrs: {
-                                                size: "small",
-                                                icon: "el-icon-caret-left",
-                                                disabled: this.__isRoot(this.currpath) ? true : false,
-                                            },
-                                            on: { click: t.back2last },
+                                                content: "返回",
+                                                placement: "top"
+                                            }
                                         },
-                                        [t._v(t._s(""))]
+                                        [
+                                            n(
+                                                "el-button",
+                                                {
+                                                    staticStyle: { "padding-left": "revert", "float": "left", "width": "25px", "margin-right": "10px" },
+                                                    attrs: {
+                                                        size: "small",
+                                                        icon: "el-icon-caret-left",
+                                                        disabled: this.__isRoot(this.currpath) ? true : false,
+                                                    },
+                                                    on: { click: t.back2last },
+                                                },
+                                                [t._v(t._s(""))]
+                                            ),
+                                        ]
                                     ),
                                     n(
                                         "span",
@@ -1362,46 +1378,80 @@ webpackJsonp([0], {
                                         [this._v("当前:" + this.currpath)]
                                     ),
                                     n(
-                                        "el-button",
+                                        "el-tooltip",
                                         {
-                                            staticStyle: { "padding-left": "revert", "float": "right", "width": "25px", "margin-left": "2px" },
                                             attrs: {
-                                                size: "small",
-                                                icon: "el-icon-delete",
-                                                // disabled: this.__isRoot(this.currpath) ? true : false,
-                                            },
-                                            // on: { click: t.back2last },
+                                                content: "删除",
+                                                placement: "top"
+                                            }
                                         },
-                                        [t._v(t._s(""))]
+                                        [
+                                            n(
+                                                "el-button",
+                                                {
+                                                    staticStyle: { "padding-left": "revert", "float": "right", "width": "25px", "margin-left": "2px" },
+                                                    attrs: {
+                                                        size: "small",
+                                                        icon: "el-icon-delete",
+                                                        // disabled: this.__isRoot(this.currpath) ? true : false,
+                                                    },
+                                                    // on: { click: t.back2last },
+                                                },
+                                                [t._v(t._s(""))]
+                                            ),
+                                        ]
                                     ),
                                     n(
-                                        "el-button",
+                                        "el-tooltip",
                                         {
-                                            staticStyle: { "padding-left": "revert", "float": "right", "width": "25px", "margin-left": "2px" },
                                             attrs: {
-                                                size: "small",
-                                                icon: "el-icon-upload",
-                                                "data-toggle": "modal",
-                                                "data-target": "#uploadModel",
-                                                // disabled: this.__isRoot(this.currpath) ? true : false,
-                                            },
-                                            on: { click: t.uploadfile },
+                                                content: "上传",
+                                                placement: "top"
+                                            }
                                         },
-                                        [t._v(t._s(""))]
+                                        [
+                                            n(
+                                                "el-button",
+                                                {
+                                                    staticStyle: { "padding-left": "revert", "float": "right", "width": "25px", "margin-left": "2px" },
+                                                    attrs: {
+                                                        size: "small",
+                                                        icon: "el-icon-upload",
+                                                        "data-toggle": "modal",
+                                                        "data-target": "#uploadModel",
+                                                        // disabled: this.__isRoot(this.currpath) ? true : false,
+                                                    },
+                                                    on: { click: t.uploadfile },
+                                                },
+                                                [t._v(t._s(""))]
+                                            ),
+                                        ]
                                     ),
                                     n(
-                                        "el-button",
+                                        "el-tooltip",
                                         {
-                                            staticStyle: { "padding-left": "revert", "float": "right", "width": "25px", "margin-left": "2px" },
                                             attrs: {
-                                                size: "small",
-                                                icon: "el-icon-folder-add",
-                                                // disabled: this.__isRoot(this.currpath) ? true : false,
-                                            },
-                                            on: { click: t.__newfolder },
+                                                content: "新建",
+                                                placement: "top"
+                                            }
                                         },
-                                        [t._v(t._s(""))]
+                                        [
+                                            n(
+                                                "el-button",
+                                                {
+                                                    staticStyle: { "padding-left": "revert", "float": "right", "width": "25px", "margin-left": "2px" },
+                                                    attrs: {
+                                                        size: "small",
+                                                        icon: "el-icon-folder-add",
+                                                        // disabled: this.__isRoot(this.currpath) ? true : false,
+                                                    },
+                                                    on: { click: t.__newfolder },
+                                                },
+                                                [t._v(t._s(""))]
+                                            ),
+                                        ]
                                     ),
+
                                     n("div", {
                                         attrs: {
                                             class: "modal fade",
@@ -1441,8 +1491,8 @@ webpackJsonp([0], {
                                                                 attrs: {
                                                                     drag: "",
                                                                     action: this.upurl + "/?path=" + t.currpath,
-                                                                    "on-success": this.weqewqq2,
-                                                                    "on-preview": this.weqweqeq,
+                                                                    "on-success": this.upload_success,
+                                                                    "on-preview": this.upload_preview,
                                                                     multiple: "",
                                                                 },
                                                             },
@@ -1510,13 +1560,6 @@ webpackJsonp([0], {
                                                         },
                                                         [
                                                             n("span", [t._v(t._s(e.name))]),
-                                                            n(
-                                                                "span",
-                                                                {
-                                                                    staticStyle: { "font-size": "14px", "float": "right" },
-                                                                },
-                                                                [t._v(t.formatSize(e.size))]
-                                                            ),
                                                         ]
                                                     ),
                                                     n(
@@ -1532,6 +1575,13 @@ webpackJsonp([0], {
                                                                     staticStyle: { "font-size": "10px" },
                                                                 },
                                                                 [t._v(e.type == "folder" ? "创建时间" + t._s(e.date) : "上传时间: " + t._s(e.date))]
+                                                            ),
+                                                            n(
+                                                                "span",
+                                                                {
+                                                                    staticStyle: { "font-size": "10px", "float": "right" },
+                                                                },
+                                                                [t._v(t.formatSize(e.size))]
                                                             ),
                                                         ]
                                                     ),
@@ -1637,12 +1687,13 @@ webpackJsonp([0], {
                                                 attrs: {
                                                     size: "small",
                                                     icon: "el-icon-caret-bottom",
-                                                    disabled: t.disbxas,
+                                                    // disabled: t.disbxas,
                                                     loading: t.loadingx,
                                                 },
                                                 on: { click: t.load },
                                             },
-                                            [t._v(t._s(t.disbxas ? "没有更多" : "加载更多"))]
+                                            [t._v(t._s("加载更多"))] //t.disbxas ? "没有更多" : 
+                                            // TODO: 修复t.disbxas
                                         ),
                                         n(
                                             "el-button",

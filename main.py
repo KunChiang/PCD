@@ -185,13 +185,14 @@ def newid():
     return jsonify({"id": newId(string)})
 
 
-@app.route('/newfolder/', methods=['GET'])
+@app.route('/newfolder/', methods=['POST'])
 def newfolder():
     path = request.args.get("path")
     print("Create folder:", path)
     try:
-        # newFolder(path)
-        return jsonify({"md5id": newId(path), "created": True})
+        info = newFolder(path)
+        print(info)
+        return jsonify(info)
     except Exception as e:
         return jsonify({"created": False, "error": str(e)})
 

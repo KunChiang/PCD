@@ -1285,7 +1285,12 @@ webpackJsonp([0], {
                         return res.toFixed(2) + units[i]
                     },
                     upload_success: function (t, e, o) {
-                        console.log("upload success: ", t);
+                        this.$notify({
+                            title: '成功',
+                            message: '文件上传成功: ' + t.result,
+                            type: 'success',
+                            showClose: false
+                        });
                         var a = this;
                         a.indexs = 0;
                         a.namels = [];

@@ -107,7 +107,7 @@ def fileExists(filename, path, datasource=fileList):
     with open(datasource, 'r') as f:
         datasds = json.load(f)
         for d in datasds:
-            if d['name'] == filename:
+            if d['name'] == filename and d['path'] == path:
                 return True
     return False
 

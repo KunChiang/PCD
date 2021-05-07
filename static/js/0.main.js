@@ -1143,9 +1143,14 @@ webpackJsonp([0], {
                                                 case 0:
                                                     return n.next = 2, e.$axios.get("/tclist?limit=12&offset=" + 12 * t + "&path=" + this.currpath);
                                                 case 2:
-                                                    // console.log("[1]: ", e.disbxas, (r = (r = n.sent).data).length);
-                                                    (r = (r = n.sent).data).length < 24 && (e.disbxas = !0), e.namels = e.namels.concat(r), e.indexs += 1;
-                                                // console.log("[2]: ", e.disbxas);
+                                                    // (r = (r = n.sent).data).length < 12 && (e.disbxas = !0);
+                                                    if ((r = (r = n.sent).data).length < 12) {
+                                                        e.disbxas = !0;
+                                                    } else {
+                                                        e.disbxas = !1;
+                                                    }
+                                                    e.namels = e.namels.concat(r);
+                                                    e.indexs += 1;
                                                 case 7:
                                                 case "end":
                                                     return n.stop();
@@ -1191,6 +1196,7 @@ webpackJsonp([0], {
                             this.currpath = this.__getNewPath(p, e)
                             this.indexs = 0;
                             this.namels = [];
+                            // this.disbxas = !1;
                             this.getlist(this.indexs);
                             console.log("CurrPath: ", this.currpath);
                         } else {
@@ -1230,7 +1236,7 @@ webpackJsonp([0], {
                         var t = this;
                         t.namels = [];
                         t.indexs = 0;
-                        t.disbxas = !1;
+                        // t.disbxas = !1;
                         t.loadingx = !1;
                         t.getlist(t.indexs);
                     },
@@ -1264,6 +1270,7 @@ webpackJsonp([0], {
                         console.log("Back to: " + sub)
                         t.indexs = 0;
                         t.namels = [];
+                        // t.disbxas = !1;
                         t.getlist(t.indexs);
                     },
                     formatSize: function (a) {
@@ -1687,13 +1694,12 @@ webpackJsonp([0], {
                                                 attrs: {
                                                     size: "small",
                                                     icon: "el-icon-caret-bottom",
-                                                    // disabled: t.disbxas,
+                                                    disabled: t.disbxas,
                                                     loading: t.loadingx,
                                                 },
                                                 on: { click: t.load },
                                             },
-                                            [t._v(t._s("加载更多"))] //t.disbxas ? "没有更多" : 
-                                            // TODO: 修复t.disbxas
+                                            [t._v(t._s(t.disbxas ? "没有更多" : "加载更多"))]
                                         ),
                                         n(
                                             "el-button",

@@ -14,6 +14,7 @@ Recent work:
 - [x] 新增filesize，同步更新folder size
 - [ ] 排序：类型、文件名、上传时间
 - [ ] mysql支持
+- [ ] Logo
 
 Future work:
 

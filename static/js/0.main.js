@@ -1393,6 +1393,50 @@ webpackJsonp([0], {
                                         "el-tooltip",
                                         {
                                             attrs: {
+                                                content: "搜索",
+                                                placement: "top"
+                                            }
+                                        },
+                                        [
+                                            n(
+                                                "el-button",
+                                                {
+                                                    staticStyle: { "padding-left": "revert", "float": "right", "width": "25px", "margin-left": "2px" },
+                                                    attrs: {
+                                                        size: "small",
+                                                        icon: "el-icon-search",
+                                                    },
+                                                },
+                                                [t._v(t._s(""))]
+                                            ),
+                                        ]
+                                    ),
+                                    n(
+                                        "el-tooltip",
+                                        {
+                                            attrs: {
+                                                content: "排序",
+                                                placement: "top"
+                                            }
+                                        },
+                                        [
+                                            n(
+                                                "el-button",
+                                                {
+                                                    staticStyle: { "padding-left": "revert", "float": "right", "width": "25px", "margin-left": "2px" },
+                                                    attrs: {
+                                                        size: "small",
+                                                        icon: "el-icon-sort",
+                                                    },
+                                                },
+                                                [t._v(t._s(""))]
+                                            ),
+                                        ]
+                                    ),
+                                    n(
+                                        "el-tooltip",
+                                        {
+                                            attrs: {
                                                 content: "删除",
                                                 placement: "top"
                                             }
@@ -1405,7 +1449,6 @@ webpackJsonp([0], {
                                                     attrs: {
                                                         size: "small",
                                                         icon: "el-icon-delete",
-                                                        // disabled: this.__isRoot(this.currpath) ? true : false,
                                                     },
                                                     // on: { click: t.back2last },
                                                 },
@@ -1431,7 +1474,6 @@ webpackJsonp([0], {
                                                         icon: "el-icon-upload",
                                                         "data-toggle": "modal",
                                                         "data-target": "#uploadModel",
-                                                        // disabled: this.__isRoot(this.currpath) ? true : false,
                                                     },
                                                     on: { click: t.uploadfile },
                                                 },
@@ -1455,7 +1497,6 @@ webpackJsonp([0], {
                                                     attrs: {
                                                         size: "small",
                                                         icon: "el-icon-folder-add",
-                                                        // disabled: this.__isRoot(this.currpath) ? true : false,
                                                     },
                                                     on: { click: t.__newfolder },
                                                 },
@@ -1663,7 +1704,7 @@ webpackJsonp([0], {
                                                                                 shadow: "hover",
                                                                                 disabled: e.type == 'folder' ? true : false,
                                                                             },
-                                                                            nativeOn: {
+                                                                            on: {
                                                                                 click: function (n) {
                                                                                     return t.delete(e.id, e.down);
                                                                                 },

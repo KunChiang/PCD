@@ -77,6 +77,8 @@ def getFileType(filename):
 
 
 def getThumbnail(fid):
+    if fid == 'logo':
+        return "icon/logo.png"
     with open(fileList, 'r') as f:
         datasds = json.load(f)
         for d in datasds:
@@ -112,6 +114,32 @@ def fileExists(filename, path, datasource=fileList):
     return False
 
 
+def __updateSizes(it, data, mode='add'):
+    pids = it['pId']
+    i = 0
+    while i < len(data):
+        # for i in range(0, len(data)):
+        d = data[i]
+        print("[+] while: ", i, d['id'], d['pId'])
+        if d['type'] != 'folder':
+            i += 1
+            continue
+        if d['id'] == pids:
+            print("[+] update size", d, it['size'])
+            if mode == 'add':
+                d['size'] += it['size']
+            elif mode == 'del':
+                d['size'] -= it['size']
+            if d['pId'] == '0':
+                print("[+] while break")
+                break
+            else:
+                pids = d['pId']
+                i = 0
+                continue
+        i += 1
+
+
 def delete_file(fid, datasource=fileList):
     with open(datasource, 'r') as f:
         datasds = json.load(f)
@@ -121,15 +149,9 @@ def delete_file(fid, datasource=fileList):
         shutil.move(os.path.join(toRealPath(d['path']), d['name']),
                     os.path.join(trash, d['name']))
         datasds.remove(d)
+        __updateSizes(d, datasds, 'del')
         with open(datasource, 'w') as f:
             json.dump(datasds, f)
-
-
-def __updateSizes(add, data):
-    pid = add['pId']
-    for d in data:
-        if d['id'] == pid and d['type'] == 'folder':
-            d['size'] += add['size']
 
 
 def upload_file(file, path, datasource=fileList):

@@ -57,46 +57,33 @@ webpackJsonp(
                                         "el-container",
                                         [
                                             n("el-header", { attrs: { height: "80px" } }, [
-                                                n(
-                                                    "h1",
-                                                    {
-                                                        staticStyle: {
-                                                            margin: "0",
-                                                            color: "#fff",
-                                                            "font-size": "1.875rem",
-                                                            "font-weight": "normal",
-                                                            float: "left",
-                                                        },
-                                                    },
-                                                    [t._v(t._s(t.upurl))]
-                                                ),
-                                                // t._v(" "),
                                                 // n(
-                                                //     "div",
+                                                //     "h1",
                                                 //     {
-                                                //         staticStyle: { float: "right" },
+                                                //         staticStyle: {
+                                                //             margin: "0",
+                                                //             color: "#fff",
+                                                //             "font-size": "1.875rem",
+                                                //             "font-weight": "normal",
+                                                //             float: "left",
+                                                //         },
                                                 //     },
-                                                //     [
-                                                //         n(
-                                                //             "router-link",
-                                                //             {
-                                                //                 staticClass: "swewq",
-                                                //                 attrs: { to: "/" },
-                                                //             },
-                                                //             [t._v("列表")]
-                                                //         ),
-                                                //         t._v(" "),
-                                                //         n(
-                                                //             "router-link",
-                                                //             {
-                                                //                 staticClass: "swewq",
-                                                //                 attrs: { to: "/upload" },
-                                                //             },
-                                                //             [t._v("上传")]
-                                                //         ),
-                                                //     ],
-                                                //     1
+                                                //     [t._v(t._s(t.upurl))]
                                                 // ),
+                                                n("el-image", {
+                                                    staticStyle: {
+                                                        width: "160px",
+                                                        height: "40px",
+                                                        "border-radius": "0px",
+                                                        float: "left",
+                                                        top: "20px",
+                                                        left: "-20px",
+                                                    },
+                                                    attrs: {
+                                                        src: window.location.protocol + "//" + window.location.host + "/icon/logo",
+                                                        fit: "cover",
+                                                    }
+                                                }),
                                             ]),
                                             t._v(" "),
                                             n("el-main", [n("router-view")], 1),

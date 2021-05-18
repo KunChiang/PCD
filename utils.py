@@ -10,6 +10,7 @@ thumbnailPath = os.path.join(dataPath, ".thumbs")
 rawFiles = os.path.join(dataPath, "root")
 trash = os.path.join(dataPath, ".trash")
 fileList = os.path.join(dataPath, "filelist.json")
+settings = os.path.join(dataPath, "settings.json")
 
 
 def allowed_file(filename):
@@ -222,3 +223,16 @@ def newId(string):
     md5.update(string.encode('utf-8'))  # 转码
     res = md5.hexdigest()
     return res
+
+
+def updateSetting(field, value, datasource=settings):
+    _setting = json.loads(open(datasource, 'rb'))
+    for k, v in _setting.items():
+        if k == field:
+            print("will update setting {} from {} to {}".format(k, v, value))
+            _setting[k] = value
+    json.dump(_setting, open(datasource, 'wb'))
+
+
+def getSettings(id, datasource=settings):
+    return json.loads(open(datasource, 'rb'))[id]

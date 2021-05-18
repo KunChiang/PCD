@@ -197,28 +197,18 @@ def newfolder():
         return jsonify({"created": False, "error": str(e)})
 
 
-@app.route('/update/', methods=['POST'])
-def update():
-    folders = requests.args.getlist("tree")
-    print(folders)
-    return jsonify("update tree")
+@app.route('/getSetting', methods=['GET'])
+def getSetting():
+    id = request.args.get("id")
+    return jsonify(getSettings(id if id else 'default'))
 
 
-@app.route('/browse/', methods=['POST', "PUT", "GET"])
-def browse():
-    ###
-    # 返回值：
-    # [{ id: '', pid: '', name: ''}, { id: '', pid: '', name: ''},]
-    ###
-    path = request.args.get("path")
-    print(" [+] path: ", path)
-    res = []
-    with open(fileList, 'r') as f:
-        datasds = json.load(f)
-        for i in datasds:
-            if i['type'] == 'folder':
-                res.append(i)
-    return jsonify(res)
+@app.route('/updateSetting/', methods=['POST'])
+def setting():
+    field = request.args.get("field")
+    value = request.args.get("value")
+    print("setting {} to: {}".format(field, value))
+    return jsonify("setting {} to: {}".format(field, value))
 
 
 if '__main__' == __name__:

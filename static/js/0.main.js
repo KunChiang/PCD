@@ -1285,11 +1285,12 @@ webpackJsonp([0], {
                         return res.toFixed(2) + units[i]
                     },
                     upload_success: function (t, e, o) {
-                        this.$notify({
+                        this.$message({
                             title: '成功',
                             message: '文件上传成功: ' + t.result,
                             type: 'success',
-                            showClose: false
+                            showClose: false,
+                            duration: 1000,
                         });
                         var a = this;
                         a.indexs = 0;
@@ -1306,7 +1307,7 @@ webpackJsonp([0], {
                                 t.name
                             );
                         } else {
-                            this.$notify.error({
+                            this.$message.error({
                                 title: "错误",
                                 message: "上传失败，请重试！",
                             });
@@ -1343,6 +1344,13 @@ webpackJsonp([0], {
                             e.indexs = 0;
                             e.namels = [];
                             e.getlist(e.indexs);
+                        })
+                    },
+                    updateSort: function () {
+                        console.log("Setting");
+                        var e = this;
+                        e.$axios.post('/updateSetting/?' + 'field=' + 'bbb&value=' + 'vvvvv').then(response => {
+                            console.log(response);
                         })
                     }
                 },
@@ -1428,6 +1436,7 @@ webpackJsonp([0], {
                                                         size: "small",
                                                         icon: "el-icon-sort",
                                                     },
+                                                    on: { click: t.updateSort }
                                                 },
                                                 [t._v(t._s(""))]
                                             ),
@@ -1608,6 +1617,7 @@ webpackJsonp([0], {
                                                     n(
                                                         "div",
                                                         {
+                                                            staticStyle: { "font-size": "14px", "height": "18px" },
                                                             attrs: { slot: "header" },
                                                             slot: "header",
                                                         },
@@ -1618,6 +1628,7 @@ webpackJsonp([0], {
                                                     n(
                                                         "div",
                                                         {
+                                                            // staticStyle: { "font-size": "10px" },
                                                             attrs: { slot: "header" },
                                                             slot: "header",
                                                         },

@@ -13,7 +13,7 @@ Recent work:
   - [x] 上传页面功能迁移至上传按钮，不弹出独立页面，使用model
 - [x] 新增filesize，同步更新folder size
 - [ ] 排序：类型、文件名、上传时间
-- [ ] mysql支持
+- [ ] mysql/es存储
 - [ ] Logo
 
 Future work:
@@ -30,7 +30,7 @@ filelist.json/MySQL:
 ```json
 [
     {
-        "id": 0,
+        "id": 1,
         "pId": 0,
         "name": "root",
         "type": "folder",
@@ -40,8 +40,8 @@ filelist.json/MySQL:
         "date": "2021/03/26 18:20:55",
     },
     {
-        "id": 0,
-        "pId": 0,
+        "id": 11,
+        "pId": 1,
         "name": "Kareo API Guide.pdf",
         "type": "pdf",
         "path": "",
@@ -50,8 +50,8 @@ filelist.json/MySQL:
         "date": "2021/03/26 18:20:55"
     },
     {
-        "id": 0,
-        "pId": 0,
+        "id": 12,
+        "pId": 1,
         "name": "123",
         "type": "folder",
         "path": "",
@@ -61,4 +61,3 @@ filelist.json/MySQL:
     },
 ]
 ```
-

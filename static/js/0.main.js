@@ -1617,7 +1617,12 @@ webpackJsonp([0], {
                                                     n(
                                                         "div",
                                                         {
-                                                            staticStyle: { "font-size": "14px", "height": "18px" },
+                                                            staticStyle: {
+                                                                "font-size": "14px", "height": "18px",
+                                                                "overflow": "hidden",
+                                                                "text-overflow": "ellipsis",
+                                                                "white-space": "nowrap"
+                                                            },
                                                             attrs: { slot: "header" },
                                                             slot: "header",
                                                         },

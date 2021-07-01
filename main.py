@@ -127,10 +127,7 @@ def tclist():
                 print(datasds)
         sdwewqrt = []
         for ix in datasds:
-            if len(ix["name"]) >= 24:
-                xsdwok = ix["name"][0:24]+"..."
-            else:
-                xsdwok = ix["name"]
+            xsdwok = ix["name"]
             sdwewqrt.append(
                 {
                     "id": ix["id"],

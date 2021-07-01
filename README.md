@@ -12,6 +12,7 @@ Recent work:
     - [ ] 批量删除
   - [x] 上传页面功能迁移至上传按钮，不弹出独立页面，使用model
 - [x] 新增filesize，同步更新folder size
+- [ ] 文件/文件夹重命名
 - [ ] 排序：类型、文件名、上传时间
 - [ ] mysql/es存储
 - [ ] Logo

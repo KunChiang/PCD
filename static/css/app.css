@@ -9848,6 +9848,9 @@
   padding: 12px 12px;
   border-bottom: 1px solid #ebeef5;
   box-sizing: border-box;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space:nowrap;
 }
 
 .el-card__body {

@@ -57,7 +57,7 @@ def uploaded_file(filename):
             cur = json.load(f)
         for i in cur:
             if i["name"] == filename:
-                store_path = os.path.join(rawFiles, i["name"])
+                store_path = os.path.join(i['_realPath'], i["name"])
                 break
         makediv = i["name"]
     minetpye = magic.from_file(store_path, mime=True)
@@ -194,13 +194,24 @@ def newfolder():
         return jsonify({"created": False, "error": str(e)})
 
 
-@app.route('/getSetting', methods=['GET'])
+@app.route('/rename/', methods=['POST'])
+def rename():
+    fid = request.args.get("fileid")
+    newname = request.args.get("newname")
+    try:
+        rename_file(fid, newname)
+        return jsonify({"rename": "rename {} to {}".format(fid, newname)})
+    except Exception as e:
+        return jsonify({"rename": False, "error": str(e)})
+
+
+@ app.route('/getSetting', methods=['GET'])
 def getSetting():
     id = request.args.get("id")
     return jsonify(getSettings(id if id else 'default'))
 
 
-@app.route('/updateSetting/', methods=['POST'])
+@ app.route('/updateSetting/', methods=['POST'])
 def setting():
     field = request.args.get("field")
     value = request.args.get("value")

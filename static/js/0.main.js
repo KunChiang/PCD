@@ -1200,6 +1200,7 @@ webpackJsonp([0], {
                             this.getlist(this.indexs);
                             console.log("CurrPath: ", this.currpath);
                         } else {
+                            console.log("file:", e)
                             window.open(
                                 window.location.protocol +
                                 "//" +
@@ -1234,12 +1235,20 @@ webpackJsonp([0], {
                     },
                     __rename: function (d, t) {
                         var e = this;
-                        var a = prompt('重命名', '请输入新名称', {
+                        var a = prompt('重命名文件: ' + t, t, {
                             confirmButtonText: '确定',
                             cancelButtonText: '取消',
                             inputPattern: /[\w!#$%&'*+/=?^_`{|}~-]+(?:\.[\w!#$%&'*+/=?^_`{|}~-]+)*@(?:[\w](?:[\w-]*[\w])?\.)+[\w](?:[\w-]*[\w])?/,
                             inputErrorMessage: '名称不正确'
                         });
+                        if (a) {
+                            e.$axios.post('/rename/?fileid=' + d + '&newname=' + a).then(response => {
+                                console.log(response);
+                                e.indexs = 0;
+                                e.namels = [];
+                                e.getlist(e.indexs);
+                            })
+                        }
                     },
                     "fold": function () {
                         var t = this;
@@ -1713,7 +1722,7 @@ webpackJsonp([0], {
                                                                             },
                                                                             attrs: {
                                                                                 shadow: "hover",
-                                                                                disabled: e.name == 'root' ? true : false,
+                                                                                disabled: e.type == 'folder' ? true : false,
                                                                             },
                                                                             on: {
                                                                                 click: function (n) {

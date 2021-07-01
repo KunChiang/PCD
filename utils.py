@@ -155,6 +155,21 @@ def delete_file(fid, datasource=fileList):
             json.dump(datasds, f)
 
 
+def rename_file(fid, newname, datasource=fileList):
+    with open(datasource, 'r') as f:
+        datasds = json.load(f)
+        for d in datasds:
+            if d['id'] == fid:
+                break
+        print("rename: {} to {}".format(os.path.join(toRealPath(
+            d['path']), d['name']), os.path.join(toRealPath(d['path']), newname)))
+        os.rename(os.path.join(toRealPath(d['path']), d['name']),
+                  os.path.join(toRealPath(d['path']), newname))
+        d['name'] = newname
+        with open(datasource, 'w') as f:
+            json.dump(datasds, f)
+
+
 def upload_file(file, path, datasource=fileList):
     print("[+] upload file: ", file.filename)
     md5Name = newId(os.path.join(path, file.filename))

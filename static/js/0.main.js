@@ -1232,6 +1232,15 @@ webpackJsonp([0], {
                             console.log("cancel delete");
                         }
                     },
+                    __rename: function (d, t) {
+                        var e = this;
+                        var a = prompt('重命名', '请输入新名称', {
+                            confirmButtonText: '确定',
+                            cancelButtonText: '取消',
+                            inputPattern: /[\w!#$%&'*+/=?^_`{|}~-]+(?:\.[\w!#$%&'*+/=?^_`{|}~-]+)*@(?:[\w](?:[\w-]*[\w])?\.)+[\w](?:[\w-]*[\w])?/,
+                            inputErrorMessage: '名称不正确'
+                        });
+                    },
                     "fold": function () {
                         var t = this;
                         t.namels = [];
@@ -1339,12 +1348,14 @@ webpackJsonp([0], {
                             inputPattern: /[\w!#$%&'*+/=?^_`{|}~-]+(?:\.[\w!#$%&'*+/=?^_`{|}~-]+)*@(?:[\w](?:[\w-]*[\w])?\.)+[\w](?:[\w-]*[\w])?/,
                             inputErrorMessage: '文件夹名称不正确'
                         })
-                        e.$axios.post('/newfolder/?path=' + e.currpath + '/' + a).then(response => {
-                            console.log(response);
-                            e.indexs = 0;
-                            e.namels = [];
-                            e.getlist(e.indexs);
-                        })
+                        if (a) {
+                            e.$axios.post('/newfolder/?path=' + e.currpath + '/' + a).then(response => {
+                                console.log(response);
+                                e.indexs = 0;
+                                e.namels = [];
+                                e.getlist(e.indexs);
+                            })
+                        }
                     },
                     updateSort: function () {
                         console.log("Setting");
@@ -1692,6 +1703,26 @@ webpackJsonp([0], {
                                                                     },
                                                                 },
                                                                 [
+                                                                    n(
+                                                                        "el-link",
+                                                                        {
+                                                                            staticClass: "swewq",
+                                                                            staticStyle: {
+                                                                                "font-size": "16px",
+                                                                                margin: "left",
+                                                                            },
+                                                                            attrs: {
+                                                                                shadow: "hover",
+                                                                                disabled: e.name == 'root' ? true : false,
+                                                                            },
+                                                                            on: {
+                                                                                click: function (n) {
+                                                                                    return t.__rename(e.id, e.down);
+                                                                                },
+                                                                            },
+                                                                        },
+                                                                        [t._v("重命名")]
+                                                                    ),
                                                                     n(
                                                                         "el-link",
                                                                         {

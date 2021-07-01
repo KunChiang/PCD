@@ -101,6 +101,7 @@ def icon(fid):
 
 @app.route('/tclist', methods=['GET'])
 def tclist():
+    settings = getSettings('default')
     if (not request.args.get("limit")) or (not request.args.get("offset")) or (not request.args.get("path")):
         return jsonify({"err": "参数欠缺", "author": "Kun"})
     else:
@@ -114,6 +115,8 @@ def tclist():
             curxsd.close()
         else:
             path = request.args.get("path")
+            sortList(by=settings['sort']['by'],
+                     reverse=settings['sort']['reverse'])
             with open(fileList, 'r') as f:
                 xsdawe = json.load(f)
                 files = []
@@ -215,7 +218,7 @@ def getSetting():
 def setting():
     field = request.args.get("field")
     value = request.args.get("value")
-    print("setting {} to: {}".format(field, value))
+    updateSetting('default', 'sort', field, value)
     return jsonify("setting {} to: {}".format(field, value))
 
 

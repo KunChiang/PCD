@@ -240,14 +240,27 @@ def newId(string):
     return res
 
 
-def updateSetting(field, value, datasource=settings):
-    _setting = json.loads(open(datasource, 'rb'))
-    for k, v in _setting.items():
-        if k == field:
-            print("will update setting {} from {} to {}".format(k, v, value))
-            _setting[k] = value
-    json.dump(_setting, open(datasource, 'wb'))
+def updateSetting(id, option, field, value, datasource=settings):
+    with open(datasource, 'r') as f:
+        __settings = json.load(f)
+        _setting = __settings[id][option]
+        for k, v in _setting.items():
+            if k == field:
+                print("will update setting {} from {} to {}".format(k, v, value))
+                _setting[k] = value
+        with open(datasource, 'w') as f:
+            json.dump(__settings, f)
 
 
 def getSettings(id, datasource=settings):
-    return json.loads(open(datasource, 'rb'))[id]
+    with open(datasource, 'r') as f:
+        settings = json.load(f)[id]
+        return settings
+
+
+def sortList(by, reverse=False, datasource=fileList):
+    with open(datasource, 'r') as f:
+        datasds = json.load(f)
+        datasds.sort(key=lambda k: (k.get(by, 0)), reverse=reverse)
+        with open(datasource, 'w') as f:
+            json.dump(datasds, f)

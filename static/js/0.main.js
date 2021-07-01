@@ -1113,6 +1113,22 @@ webpackJsonp([0], {
                             "//" +
                             window.location.host +
                             "/download/",
+                        options: [{
+                            value: '选项1',
+                            label: '黄金糕'
+                        }, {
+                            value: '选项2',
+                            label: '双皮奶'
+                        }, {
+                            value: '选项3',
+                            label: '蚵仔煎'
+                        }, {
+                            value: '选项4',
+                            label: '龙须面'
+                        }, {
+                            value: '选项5',
+                            label: '北京烤鸭'
+                        }],
                     };
                 },
                 created: function () {
@@ -1367,11 +1383,25 @@ webpackJsonp([0], {
                         }
                     },
                     updateSort: function () {
-                        console.log("Setting");
-                        var e = this;
-                        e.$axios.post('/updateSetting/?' + 'field=' + 'bbb&value=' + 'vvvvv').then(response => {
-                            console.log(response);
-                        })
+                        pushHistory();
+                        window.addEventListener("popstate", function (e) {
+                            $('#SortSetup').modal('hide')
+                            console.log("return back");
+                        }, false);
+                        function pushHistory() {
+                            var state = {
+                                title: "title",
+                                url: "#"
+                            };
+                            window.history.pushState(state, "title", "#");
+                        }
+                        // var e = this;
+                        // e.$axios.post('/updateSetting/?' + 'field=' + 'by&value=' + 'name').then(response => {
+                        //     console.log(response);
+                        //     e.indexs = 0;
+                        //     e.namels = [];
+                        //     e.getlist(e.indexs);
+                        // })
                     }
                 },
             },
@@ -1455,6 +1485,8 @@ webpackJsonp([0], {
                                                     attrs: {
                                                         size: "small",
                                                         icon: "el-icon-sort",
+                                                        "data-toggle": "modal",
+                                                        "data-target": "#sortSetupModel",
                                                     },
                                                     on: { click: t.updateSort }
                                                 },
@@ -1532,6 +1564,115 @@ webpackJsonp([0], {
                                                 [t._v(t._s(""))]
                                             ),
                                         ]
+                                    ),
+                                    n("div", {
+                                        attrs: {
+                                            class: "modal fade",
+                                            id: "sortSetupModel",
+                                            tabindex: "-1",
+                                            role: "dialog",
+                                            "aria-labelledby": "sortSetupModalLabel",
+                                            "aria-hidden": "true",
+                                        },
+                                    },
+                                        [n("div", {
+                                            class: "modal-dialog modal-dialog-centered",
+                                            attrs: {
+                                                "role": "document"
+                                            }
+                                        },
+                                            [n("div", {
+                                                class: "modal-content",
+                                            },
+                                                [n("div", {
+                                                    class: "modal-header",
+                                                },
+                                                    [n("h5", {
+                                                        class: "modal-title",
+                                                        attrs: {
+                                                            id: "sortSetupModalLabel"
+                                                        }
+                                                    }, [t._v(t._s("排序"))]),
+                                                    ]),
+                                                n("div", {
+                                                    class: "modal-body"
+                                                },
+                                                    [
+                                                        n(
+                                                            "el-select",
+                                                            {
+                                                                attrs: {
+                                                                    "v-model": "value",
+                                                                    "placeholder": "请选择",
+                                                                },
+                                                            },
+                                                            [
+                                                                n("el-option", {
+                                                                    attrs: {
+                                                                        "label": "label1",
+                                                                        "value": "value1"
+                                                                    },
+                                                                }),
+                                                                n("el-option", {
+                                                                    attrs: {
+                                                                        "label": "label2",
+                                                                        "value": "alue2"
+                                                                    },
+                                                                }),
+                                                                n("el-option", {
+                                                                    attrs: {
+                                                                        "label": "label3",
+                                                                        "value": "value3"
+                                                                    },
+                                                                }),
+                                                            ]
+                                                        ),
+                                                        n(
+                                                            "el-select",
+                                                            {
+                                                                attrs: {
+                                                                    "v-model": "value",
+                                                                    "placeholder": "请选择",
+                                                                    "style": "margin-left: 20px;"
+                                                                },
+                                                            },
+                                                            [
+                                                                n("el-option", {
+                                                                    attrs: {
+                                                                        "label": "label2",
+                                                                        "value": "value2"
+                                                                    },
+                                                                }),
+                                                                n("el-option", {
+                                                                    attrs: {
+                                                                        "label": "label3",
+                                                                        "value": "value3"
+                                                                    },
+                                                                }),
+                                                            ]
+                                                        ),
+                                                    ]
+                                                ),
+                                                n("div", {
+                                                    class: "modal-footer",
+                                                },
+                                                    [n("el-button", {
+                                                        staticStyle: { "background": "#409eff", "color": "#fff" },
+                                                        attrs: {
+                                                            "data-dismiss": "modal",
+                                                        }
+                                                    }, [t._v(t._s("关闭"))]),
+                                                    n("el-button", {
+                                                        staticStyle: { "background": "#409eff", "color": "#fff" },
+                                                        attrs: {
+                                                            "data-dismiss": "modal",
+                                                        },
+                                                    }, [t._v(t._s("确定"))])],
+                                                )
+
+                                                ]
+                                            )]
+                                        )]
                                     ),
 
                                     n("div", {

@@ -1802,9 +1802,9 @@ webpackJsonp([0], {
                                                             n(
                                                                 "span",
                                                                 {
-                                                                    staticStyle: { "font-size": "10px" },
+                                                                    staticStyle: { "font-size": "10px", "float": "left" },
                                                                 },
-                                                                [t._v(e.type == "folder" ? "创建时间" + t._s(e.date) : "上传时间: " + t._s(e.date))]
+                                                                [t._v(e.type == "folder" ? "创建时间: " + t._s(e.date) : "上传时间: " + t._s(e.date))]
                                                             ),
                                                             n(
                                                                 "span",

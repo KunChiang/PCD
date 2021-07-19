@@ -2,6 +2,7 @@ import os
 import hashlib
 import json
 import time
+import datetime
 import shutil
 from PIL import Image
 
@@ -11,6 +12,51 @@ rawFiles = os.path.join(dataPath, "root")
 trash = os.path.join(dataPath, ".trash")
 fileList = os.path.join(dataPath, "filelist.json")
 settings = os.path.join(dataPath, "settings.json")
+ROOTID = "000000"
+
+# path分两种，一种是前端展示的path，一种是实际path，记为_realPath
+# path不以'/'结尾，
+# path: "/root/path/to/folder"
+# _realPath: "datas/root/path/to/folder"
+# id: 根据path(string)生成的MD5
+
+
+class File:
+    def __init__(self, id=None, pId=None, name=None, type=None, path=None, size=None, _realPath=None, thumbnail=None, date=None):
+        self.json = {
+            "id": id,
+            "pId": pId,
+            "name": name,
+            "type": type,
+            "path": path,
+            "size": size,
+            "_realPath": _realPath,
+            "thumbnail": thumbnail,
+            "date": date
+        }
+
+    def check(self):
+        for _, v in self.json.items():
+            if not v:
+                return False
+        return True
+
+    def generate(self, path, filename, pId):
+        file = os.path.join(path, filename)
+        self.json['id'] = newId(file)
+        self.json['pId'] = pId
+        self.json['name'] = filename
+        if os.path.isdir(toRealPath(file)):
+            self.json['type'] = 'folder'
+        else:
+            self.json['type'] = getFileType(filename)
+        self.json['path'] = path
+        self.json['size'] = os.stat(toRealPath(file)).st_size
+        self.json['_realPath'] = toRealPath(path)
+        self.json['thumbnail'] = "icon/folder.png" if self.json['type'] == 'folder' \
+            else generateThumbnail(toRealPath(file), self.json['id'], True)
+        self.json['date'] = time.strftime(
+            "%Y/%m/%d %H:%M:%S", time.gmtime(os.stat(toRealPath(file)).st_ctime))
 
 
 def allowed_file(filename):
@@ -25,30 +71,23 @@ def __initPath(paths):
             os.mkdir(path)
 
 
-def init():
+def init(loadLocal=False):
     __initPath([dataPath, thumbnailPath, rawFiles, trash])
+    if loadLocal:
+        readLoacl()
     if not os.path.exists(fileList):
-        json.dump([{
-            "id": newId("/root"),
-            "pId": '000000',
-            "name": "root",
-            "type": "folder",
-            "path": "/",
-            "size": 0,
-            "_realPath": rawFiles,
-            "thumbnail": "icon/folder.png",
-            "date": time.strftime("%Y/%m/%d %H:%M:%S"),
-        }], open(fileList, 'w'))
-        # json.dump({
-        #     'root': {
-        #         'name': '/root',
-        #         'path': rawFiles,
-        #         'type': 'folder',
-        #         'date': time.strftime("%Y/%m/%d %H:%M:%S"),
-        #         'thumbnail': 'icon/folder.png',
-        #         'children': [],
-        #     }
-        # }, open(fileList, 'w'))
+        f = File(
+            id=newId("/root"),
+            pId="000000",
+            name="root",
+            type="folder",
+            path="path",
+            size=0,
+            _realPath=rawFiles,
+            thumbnail="icon/folder.png",
+            date=time.strftime("%Y/%m/%d %H:%M:%S"),
+        )
+        json.dump([f.json], open(fileList, 'w'))
 
 
 def isImg(ftype):
@@ -88,11 +127,17 @@ def getThumbnail(fid):
     return None
 
 
-def generateThumbnail(file, md5Name):
-    ftype = getFileType(file.filename)
+def generateThumbnail(file, md5Name, fromLocal=False):
+    if fromLocal:
+        ftype = getFileType(file)
+    else:
+        ftype = getFileType(file.filename)
     if isImg(ftype):
         thumbnail = os.path.join(thumbnailPath, "%s.png" % (md5Name))
-        image = Image.open(file.stream)
+        if fromLocal:
+            image = Image.open(file)
+        else:
+            image = Image.open(file.stream)
         image.thumbnail((200, 200))
         image.convert('RGB').save(thumbnail, 'JPEG')
     elif isCode(ftype):
@@ -121,7 +166,7 @@ def __updateSizes(it, data, mode='add'):
     while i < len(data):
         # for i in range(0, len(data)):
         d = data[i]
-        print("[+] while: ", i, d['id'], d['pId'])
+        # print("[+] while: ", i, d['id'], d['pId'])
         if d['type'] != 'folder':
             i += 1
             continue
@@ -132,7 +177,7 @@ def __updateSizes(it, data, mode='add'):
             elif mode == 'del':
                 d['size'] -= it['size']
             if d['pId'] == '0':
-                print("[+] while break")
+                # print("[+] while break")
                 break
             else:
                 pids = d['pId']
@@ -171,27 +216,28 @@ def rename_file(fid, newname, datasource=fileList):
 
 
 def upload_file(file, path, datasource=fileList):
-    print("[+] upload file: ", file.filename)
+    # print("[+] upload file: ", file.filename)
     md5Name = newId(os.path.join(path, file.filename))
     file.seek(0)
     target_file = os.path.join(toRealPath(path), file.filename)
-    print("[+] upload target file: ", target_file)
+    # print("[+] upload target file: ", target_file)
     file.save(target_file)
     thumbnail = generateThumbnail(file, md5Name)
     with open(datasource, 'r') as f:
         datasds = json.load(f)
-        add = {
-            "id": md5Name,
-            "pId": getId(path),
-            "name": file.filename,
-            "type": getFileType(file.filename),
-            "path": path,
-            "size": os.stat(target_file).st_size,
-            "_realPath": toRealPath(path),
-            "thumbnail": thumbnail,
-            "date": time.strftime("%Y/%m/%d %H:%M:%S")}
-        datasds.append(add)
-        __updateSizes(add, datasds)
+        add = File(
+            id=md5Name,
+            pId=getId(path),
+            name=file.filename,
+            type=getFileType(file.filename),
+            path=path,
+            size=os.stat(target_file).st_size,
+            _realPath=toRealPath(path),
+            thumbnail=thumbnail,
+            date=time.strftime("%Y/%m/%d %H:%M:%S"),
+        )
+        datasds.append(add.json)
+        __updateSizes(add.json, datasds)
         with open(datasource, 'w') as f:
             json.dump(datasds, f)
 
@@ -201,20 +247,21 @@ def newFolder(path, datasource=fileList):
     d = {}
     with open(datasource, 'r') as f:
         datasds = json.load(f)
-        d = {
-            "id": newId(path),
-            "pId": getId("/".join(path.split("/")[:-1])),
-            "name": path.split("/")[-1],
-            "type": "folder",
-            "path": "/".join(path.split("/")[:-1]),
-            "size": 0,
-            "_realPath": toRealPath("/".join(path.split("/")[:-1])),
-            "thumbnail": "icon/folder.png",
-            "date": time.strftime("%Y/%m/%d %H:%M:%S")}
-        datasds.append(d)
+        d = File(
+            id=newId(path),
+            pId=getId("/".join(path.split("/")[:-1])),
+            name=path.split("/")[-1],
+            type="folder",
+            path="/".join(path.split("/")[:-1]),
+            size=0,
+            _realPath=toRealPath("/".join(path.split("/")[:-1])),
+            thumbnail="icon/folder.png",
+            date=time.strftime("%Y/%m/%d %H:%M:%S"),
+        )
+        datasds.append(d.json)
         with open(datasource, 'w') as f:
             json.dump(datasds, f)
-    return d
+    return d.json
 
 
 def toRealPath(path):
@@ -264,3 +311,37 @@ def sortList(by, reverse=False, datasource=fileList):
         datasds.sort(key=lambda k: (k.get(by, 0)), reverse=reverse)
         with open(datasource, 'w') as f:
             json.dump(datasds, f)
+
+
+def __read(path, curr, pid=ROOTID):
+    # return all files in path
+    # path: 当前文件夹所在目录（/root/下）
+    # curr: 当前文件夹名称
+    # id: 当前文件夹的id，作为当前文件夹下所有文件的pId
+    # pid: 当前文件夹的pid
+    curr_path = os.path.join(toRealPath(path), curr)
+    id = newId(os.path.join(path, curr))
+    files = os.listdir(curr_path)
+    res = []
+    total_size = 0
+    for f in files:
+        fp = os.path.join(curr_path, f)
+        f_struct = File()
+        f_struct.generate(os.path.join(path, curr), f, id)
+        if os.path.isdir(fp):
+            res.extend(__read(os.path.join(path, curr), f, id))
+        else:
+            total_size += os.stat(fp).st_size
+            res.append(f_struct.json)
+    # 最后生成当前文件夹的信息
+    path_struct = File()
+    path_struct.generate(path, curr, pid)
+    path_struct.json['size'] = total_size
+    res.append(path_struct.json)
+    return res
+
+
+def readLoacl(datasource=fileList):
+    files = __read('/', 'root')
+    with open(datasource, 'w') as f:
+        json.dump(files, f)

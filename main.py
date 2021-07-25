@@ -41,7 +41,7 @@ def index():
     return render_template('index.html', cloudname=dataMapsd["configuration"]["name"])
 
 
-@app.route('/tc/<filename>')
+@app.route('/view/<filename>')
 def uploaded_file(filename):
     if ismysql:
         cur = connsx.cursor()
@@ -99,8 +99,8 @@ def icon(fid):
     return response
 
 
-@app.route('/tclist', methods=['GET'])
-def tclist():
+@app.route('/filelist', methods=['GET'])
+def filelist():
     settings = getSettings('default')
     if (not request.args.get("limit")) or (not request.args.get("offset")) or (not request.args.get("path")):
         return jsonify({"err": "参数欠缺", "author": "Kun"})

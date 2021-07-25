@@ -1157,7 +1157,7 @@ webpackJsonp([0], {
                                         for (; ;)
                                             switch ((n.prev = n.next)) {
                                                 case 0:
-                                                    return n.next = 2, e.$axios.get("/tclist?limit=12&offset=" + 12 * t + "&path=" + this.currpath);
+                                                    return n.next = 2, e.$axios.get("/filelist?limit=12&offset=" + 12 * t + "&path=" + this.currpath);
                                                 case 2:
                                                     // (r = (r = n.sent).data).length < 12 && (e.disbxas = !0);
                                                     if ((r = (r = n.sent).data).length < 12) {
@@ -1221,7 +1221,7 @@ webpackJsonp([0], {
                                 window.location.protocol +
                                 "//" +
                                 window.location.host +
-                                "/tc/" +
+                                "/view/" +
                                 e
                             );
                         }
@@ -1337,7 +1337,7 @@ webpackJsonp([0], {
                                 window.location.protocol +
                                 "//" +
                                 window.location.host +
-                                "/tc/" +
+                                "/view/" +
                                 t.name
                             );
                         } else {

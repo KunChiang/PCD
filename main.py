@@ -59,11 +59,11 @@ def uploaded_file(filename):
             if i["name"] == filename:
                 store_path = os.path.join(i['_realPath'], i["name"])
                 break
+        _realPath = i['_realPath']
         makediv = i["name"]
     minetpye = magic.from_file(store_path, mime=True)
     if "video" in minetpye and (not request.args.get("download")):
-        response = make_response(send_from_directory(rawFiles,
-                                                     makediv))
+        response = make_response(send_from_directory(_realPath, makediv))
     else:
         def send_chunk():
             with open(store_path, 'rb') as target_file:

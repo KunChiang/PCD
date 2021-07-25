@@ -71,10 +71,17 @@ def __initPath(paths):
             os.mkdir(path)
 
 
+def __initSettings():
+    sets = {"default": {"sort": {"by": "name", "reverse": True}}}
+    json.dump(sets, open(settings, 'w'))
+
+
 def init(loadLocal=False):
     __initPath([dataPath, thumbnailPath, rawFiles, trash])
     if loadLocal:
         readLoacl()
+    if not os.path.exists(settings):
+        __initSettings()
     if not os.path.exists(fileList):
         f = File(
             id=newId("/root"),

@@ -1178,6 +1178,37 @@ webpackJsonp([0], {
                             })
                         )();
                     },
+                    getSearch: function (value) {
+                        var e = this;
+                        return a()(
+                            o.a.mark(function n() {
+                                var r;
+                                return o.a.wrap(
+                                    function (n) {
+                                        for (; ;)
+                                            switch ((n.prev = n.next)) {
+                                                case 0:
+                                                    return n.next = 2, e.$axios.get("/search/?keyword=" + value);
+                                                case 2:
+                                                    // (r = (r = n.sent).data).length < 12 && (e.disbxas = !0);
+                                                    if ((r = (r = n.sent).data).length < 12) {
+                                                        e.disbxas = !0;
+                                                    } else {
+                                                        e.disbxas = !0;
+                                                    }
+                                                    e.namels = e.namels.concat(r);
+                                                    e.indexs = 1;
+                                                case 7:
+                                                case "end":
+                                                    return n.stop();
+                                            }
+                                    },
+                                    n,
+                                    e
+                                );
+                            })
+                        )();
+                    },
                     load: function () {
                         var t = this;
                         return a()(
@@ -1268,13 +1299,14 @@ webpackJsonp([0], {
                     },
                     "refresh": function () {
                         var e = this;
-                        e.$axios.post('/refresh').then(response => {
+                        e.$axios.post('/refresh/').then(response => {
                             console.log("res: ", response);
                             if (response.res.success) {
                                 console.log("refresh success")
                                 e.indexs = 0;
                                 e.namels = [];
                                 e.getlist(e.indexs);
+                                console.log("namels: ", e.namels)
                             }
                         })
                     },
@@ -1379,22 +1411,29 @@ webpackJsonp([0], {
                     __newfolder: function () {
                         console.log("new folder");
                         var e = this;
-                        var a = prompt('新建文件夹', '请输入文件夹名称', {
+                        this.$prompt('请输入文件夹名称', '新建文件夹', {
                             confirmButtonText: '确定',
                             cancelButtonText: '取消',
-                            inputPattern: /[\w!#$%&'*+/=?^_`{|}~-]+(?:\.[\w!#$%&'*+/=?^_`{|}~-]+)*@(?:[\w](?:[\w-]*[\w])?\.)+[\w](?:[\w-]*[\w])?/,
-                            inputErrorMessage: '文件夹名称不正确'
-                        })
-                        if (a) {
-                            e.$axios.post('/newfolder/?path=' + e.currpath + '/' + a).then(response => {
+                        }).then(({ value }) => {
+                            e.$axios.post('/newfolder/?path=' + e.currpath + '/' + value).then(response => {
                                 console.log(response);
                                 e.indexs = 0;
                                 e.namels = [];
                                 e.getlist(e.indexs);
+                                this.$message({
+                                    type: 'success',
+                                    message: '创建文件夹: ' + value
+                                });
                             })
-                        }
+                        }).catch(() => {
+                            this.$message({
+                                type: 'info',
+                                message: '取消创建文件夹'
+                            });
+                        });
                     },
                     updateSort: function () {
+                        console.log("sort");
                         pushHistory();
                         window.addEventListener("popstate", function (e) {
                             $('#SortSetup').modal('hide')
@@ -1414,6 +1453,26 @@ webpackJsonp([0], {
                         //     e.namels = [];
                         //     e.getlist(e.indexs);
                         // })
+                    },
+                    research: function () {
+                        var e = this;
+                        this.$prompt('请输入搜索关键词', '搜索', {
+                            confirmButtonText: '确定',
+                            cancelButtonText: '取消',
+                        }).then(({ value }) => {
+                            this.$message({
+                                type: 'success',
+                                message: '搜索: ' + value
+                            });
+                            e.indexs = 0;
+                            e.namels = [];
+                            e.getSearch(value)
+                        }).catch(() => {
+                            this.$message({
+                                type: 'info',
+                                message: '取消搜索'
+                            });
+                        });
                     }
                 },
             },
@@ -1471,13 +1530,14 @@ webpackJsonp([0], {
                                             n(
                                                 "el-button",
                                                 {
-                                                    staticStyle: { "padding-left": "revert", "float": "right", "width": "25px", "margin-left": "2px" },
+                                                    staticStyle: { "padding-left": "revert", "float": "right", "width": "50px", "margin-left": "2px" },
                                                     attrs: {
                                                         size: "small",
                                                         icon: "el-icon-search",
                                                     },
+                                                    on: { click: t.research }
                                                 },
-                                                [t._v(t._s(""))]
+                                                [t._v(t._s("搜索"))]
                                             ),
                                         ]
                                     ),
@@ -1634,33 +1694,15 @@ webpackJsonp([0], {
                                                 },
                                                     [
                                                         n(
-                                                            "el-select",
+                                                            "el-radio",
                                                             {
                                                                 attrs: {
-                                                                    "v-model": "value",
-                                                                    "placeholder": "请选择",
+                                                                    "label": "1",
+                                                                    // "v-model": "value",
+                                                                    // "placeholder": "请选择",
                                                                 },
                                                             },
-                                                            [
-                                                                n("el-option", {
-                                                                    attrs: {
-                                                                        "label": "label1",
-                                                                        "value": "value1"
-                                                                    },
-                                                                }),
-                                                                n("el-option", {
-                                                                    attrs: {
-                                                                        "label": "label2",
-                                                                        "value": "alue2"
-                                                                    },
-                                                                }),
-                                                                n("el-option", {
-                                                                    attrs: {
-                                                                        "label": "label3",
-                                                                        "value": "value3"
-                                                                    },
-                                                                }),
-                                                            ]
+                                                            [t._v(t._s("aaa"))]
                                                         ),
                                                         n(
                                                             "el-select",
@@ -1675,13 +1717,13 @@ webpackJsonp([0], {
                                                                 n("el-option", {
                                                                     attrs: {
                                                                         "label": "label2",
-                                                                        "value": "value2"
+                                                                        "value": "value2v"
                                                                     },
                                                                 }),
                                                                 n("el-option", {
                                                                     attrs: {
                                                                         "label": "label3",
-                                                                        "value": "value3"
+                                                                        "value": "value3v"
                                                                     },
                                                                 }),
                                                             ]

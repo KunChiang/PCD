@@ -359,3 +359,13 @@ def readLoacl(datasource=fileList):
     files, _ = __read('/', 'root')
     with open(datasource, 'w') as f:
         json.dump(files, f)
+
+
+def searchKeyword(keyword, datasource=fileList):
+    res = []
+    with open(datasource, 'r') as f:
+        datasds = json.load(f)
+        for d in datasds:
+            if keyword in d['name']:
+                res.append(d)
+    return res

@@ -222,15 +222,35 @@ def setting():
     return jsonify("setting {} to: {}".format(field, value))
 
 
-@app.route('/refresh', methods=['POST'])
+@app.route('/refresh/', methods=['POST'])
 def refresh():
-    print("刷新")
     try:
         refreshLocal()
-        print("刷新成功")
         return jsonify({"success": True, "error": None})
     except Exception as e:
         return jsonify({"success": False, "error": str(e)})
+
+
+@app.route('/search/', methods=['GET'])
+def search():
+    keyword = request.args.get("keyword")
+    res = searchKeyword(keyword)
+    sdwewqrt = []
+    for ix in res:
+        xsdwok = ix["name"]
+        sdwewqrt.append(
+            {
+                "id": ix["id"],
+                "pId": ix["pId"],
+                "name": xsdwok,
+                "date": ix["date"],
+                "type": ix["type"],
+                "down": ix["name"],
+                "path": ix["path"],
+                "size": ix["size"],
+            }
+        )
+    return jsonify(sdwewqrt)
 
 
 if '__main__' == __name__:

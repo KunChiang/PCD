@@ -208,18 +208,29 @@ def rename():
         return jsonify({"rename": False, "error": str(e)})
 
 
-@ app.route('/getSetting', methods=['GET'])
+@app.route('/getSetting', methods=['GET'])
 def getSetting():
     id = request.args.get("id")
     return jsonify(getSettings(id if id else 'default'))
 
 
-@ app.route('/updateSetting/', methods=['POST'])
+@app.route('/updateSetting/', methods=['POST'])
 def setting():
     field = request.args.get("field")
     value = request.args.get("value")
     updateSetting('default', 'sort', field, value)
     return jsonify("setting {} to: {}".format(field, value))
+
+
+@app.route('/refresh', methods=['POST'])
+def refresh():
+    print("刷新")
+    try:
+        refreshLocal()
+        print("刷新成功")
+        return jsonify({"success": True, "error": None})
+    except Exception as e:
+        return jsonify({"success": False, "error": str(e)})
 
 
 if '__main__' == __name__:

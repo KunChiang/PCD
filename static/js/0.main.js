@@ -1266,6 +1266,18 @@ webpackJsonp([0], {
                             })
                         }
                     },
+                    "refresh": function () {
+                        var e = this;
+                        e.$axios.post('/refresh').then(response => {
+                            console.log("res: ", response);
+                            if (response.res.success) {
+                                console.log("refresh success")
+                                e.indexs = 0;
+                                e.namels = [];
+                                e.getlist(e.indexs);
+                            }
+                        })
+                    },
                     "fold": function () {
                         var t = this;
                         t.namels = [];
@@ -1464,6 +1476,29 @@ webpackJsonp([0], {
                                                         size: "small",
                                                         icon: "el-icon-search",
                                                     },
+                                                },
+                                                [t._v(t._s(""))]
+                                            ),
+                                        ]
+                                    ),
+                                    n(
+                                        "el-tooltip",
+                                        {
+                                            attrs: {
+                                                content: "刷新",
+                                                placement: "top"
+                                            }
+                                        },
+                                        [
+                                            n(
+                                                "el-button",
+                                                {
+                                                    staticStyle: { "padding-left": "revert", "float": "right", "width": "25px", "margin-left": "2px" },
+                                                    attrs: {
+                                                        size: "small",
+                                                        icon: "el-icon-refresh",
+                                                    },
+                                                    on: { click: t.refresh }
                                                 },
                                                 [t._v(t._s(""))]
                                             ),

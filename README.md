@@ -16,6 +16,8 @@ Recent work:
 - [ ] 排序：类型、文件名、上传时间
 - [ ] mysql/es存储
 - [ ] Logo
+- [x] load from local
+- [x] 刷新
 
 Future work:
 

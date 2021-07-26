@@ -97,6 +97,11 @@ def init(loadLocal=False):
         json.dump([f.json], open(fileList, 'w'))
 
 
+def refreshLocal(datasource=fileList):
+    os.remove(datasource)
+    readLoacl(datasource)
+
+
 def isImg(ftype):
     if ftype in ['bmp', 'dib', 'png', 'jpg', 'jpeg', 'pbm', 'pgm', 'ppm', 'tif', 'tiff']:
         return True
@@ -336,7 +341,9 @@ def __read(path, curr, pid=ROOTID):
         f_struct = File()
         f_struct.generate(os.path.join(path, curr), f, id)
         if os.path.isdir(fp):
-            res.extend(__read(os.path.join(path, curr), f, id))
+            tmp_res, tmp_size = __read(os.path.join(path, curr), f, id)
+            res.extend(tmp_res)
+            total_size += tmp_size
         else:
             total_size += os.stat(fp).st_size
             res.append(f_struct.json)
@@ -345,10 +352,10 @@ def __read(path, curr, pid=ROOTID):
     path_struct.generate(path, curr, pid)
     path_struct.json['size'] = total_size
     res.append(path_struct.json)
-    return res
+    return res, total_size
 
 
 def readLoacl(datasource=fileList):
-    files = __read('/', 'root')
+    files, _ = __read('/', 'root')
     with open(datasource, 'w') as f:
         json.dump(files, f)

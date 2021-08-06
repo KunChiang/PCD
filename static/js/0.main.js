@@ -1157,10 +1157,10 @@ webpackJsonp([0], {
                                         for (; ;)
                                             switch ((n.prev = n.next)) {
                                                 case 0:
-                                                    return n.next = 2, e.$axios.get("/filelist?limit=12&offset=" + 12 * t + "&path=" + this.currpath);
+                                                    return n.next = 2, e.$axios.get("/filelist?limit=20&offset=" + 20 * t + "&path=" + this.currpath);
                                                 case 2:
                                                     // (r = (r = n.sent).data).length < 12 && (e.disbxas = !0);
-                                                    if ((r = (r = n.sent).data).length < 12) {
+                                                    if ((r = (r = n.sent).data).length < 20) {
                                                         e.disbxas = !0;
                                                     } else {
                                                         e.disbxas = !1;
@@ -1191,7 +1191,7 @@ webpackJsonp([0], {
                                                     return n.next = 2, e.$axios.get("/search/?keyword=" + value);
                                                 case 2:
                                                     // (r = (r = n.sent).data).length < 12 && (e.disbxas = !0);
-                                                    if ((r = (r = n.sent).data).length < 12) {
+                                                    if ((r = (r = n.sent).data).length < 20) {
                                                         e.disbxas = !0;
                                                     } else {
                                                         e.disbxas = !0;
@@ -1270,7 +1270,7 @@ webpackJsonp([0], {
                         return arr
                     },
                     delete: function (d, t) {
-                        var r = confirm("确定要删除文件：" + t + " 吗？？");
+                        var r = this.$confirm("确定要删除文件：" + t + " 吗?");
                         var e = this;
                         if (r == true) {
                             e.$axios.get("/delete/" + d);
@@ -1282,20 +1282,26 @@ webpackJsonp([0], {
                     },
                     __rename: function (d, t) {
                         var e = this;
-                        var a = prompt('重命名文件: ' + t, t, {
+                        this.$prompt(t, '重命名文件', {
                             confirmButtonText: '确定',
                             cancelButtonText: '取消',
-                            inputPattern: /[\w!#$%&'*+/=?^_`{|}~-]+(?:\.[\w!#$%&'*+/=?^_`{|}~-]+)*@(?:[\w](?:[\w-]*[\w])?\.)+[\w](?:[\w-]*[\w])?/,
-                            inputErrorMessage: '名称不正确'
-                        });
-                        if (a) {
-                            e.$axios.post('/rename/?fileid=' + d + '&newname=' + a).then(response => {
+                        }).then(({ value }) => {
+                            e.$axios.post('/rename/?fileid=' + d + '&newname=' + value).then(response => {
                                 console.log(response);
                                 e.indexs = 0;
                                 e.namels = [];
                                 e.getlist(e.indexs);
+                                this.$message({
+                                    type: 'success',
+                                    message: '重命名为: ' + value
+                                });
                             })
-                        }
+                        }).catch(() => {
+                            this.$message({
+                                type: 'info',
+                                message: '取消重命名文件'
+                            });
+                        });
                     },
                     "refresh": function () {
                         var e = this;
@@ -1434,25 +1440,17 @@ webpackJsonp([0], {
                     },
                     updateSort: function () {
                         console.log("sort");
-                        pushHistory();
-                        window.addEventListener("popstate", function (e) {
-                            $('#SortSetup').modal('hide')
-                            console.log("return back");
-                        }, false);
-                        function pushHistory() {
-                            var state = {
-                                title: "title",
-                                url: "#"
-                            };
-                            window.history.pushState(state, "title", "#");
-                        }
-                        // var e = this;
-                        // e.$axios.post('/updateSetting/?' + 'field=' + 'by&value=' + 'name').then(response => {
-                        //     console.log(response);
-                        //     e.indexs = 0;
-                        //     e.namels = [];
-                        //     e.getlist(e.indexs);
-                        // })
+                        var e = this;
+                        e.$axios.get('/updateSort').then(response => {
+                            console.log(response);
+                            this.$message({
+                                type: 'info',
+                                message: response.res.desc
+                            });
+                            e.indexs = 0;
+                            e.namels = [];
+                            e.getlist(e.indexs);
+                        })
                     },
                     research: function () {
                         var e = this;
@@ -1468,6 +1466,9 @@ webpackJsonp([0], {
                             e.namels = [];
                             e.getSearch(value)
                         }).catch(() => {
+                            e.indexs = 0;
+                            e.namels = [];
+                            e.getlist(e.indexs);
                             this.$message({
                                 type: 'info',
                                 message: '取消搜索'
@@ -1530,7 +1531,7 @@ webpackJsonp([0], {
                                             n(
                                                 "el-button",
                                                 {
-                                                    staticStyle: { "padding-left": "revert", "float": "right", "width": "50px", "margin-left": "2px" },
+                                                    staticStyle: { "padding-left": "revert", "float": "right", "width": "55px", "margin-left": "2px" },
                                                     attrs: {
                                                         size: "small",
                                                         icon: "el-icon-search",
@@ -1580,8 +1581,6 @@ webpackJsonp([0], {
                                                     attrs: {
                                                         size: "small",
                                                         icon: "el-icon-sort",
-                                                        "data-toggle": "modal",
-                                                        "data-target": "#sortSetupModel",
                                                     },
                                                     on: { click: t.updateSort }
                                                 },
@@ -1659,97 +1658,6 @@ webpackJsonp([0], {
                                                 [t._v(t._s(""))]
                                             ),
                                         ]
-                                    ),
-                                    n("div", {
-                                        attrs: {
-                                            class: "modal fade",
-                                            id: "sortSetupModel",
-                                            tabindex: "-1",
-                                            role: "dialog",
-                                            "aria-labelledby": "sortSetupModalLabel",
-                                            "aria-hidden": "true",
-                                        },
-                                    },
-                                        [n("div", {
-                                            class: "modal-dialog modal-dialog-centered",
-                                            attrs: {
-                                                "role": "document"
-                                            }
-                                        },
-                                            [n("div", {
-                                                class: "modal-content",
-                                            },
-                                                [n("div", {
-                                                    class: "modal-header",
-                                                },
-                                                    [n("h5", {
-                                                        class: "modal-title",
-                                                        attrs: {
-                                                            id: "sortSetupModalLabel"
-                                                        }
-                                                    }, [t._v(t._s("排序"))]),
-                                                    ]),
-                                                n("div", {
-                                                    class: "modal-body"
-                                                },
-                                                    [
-                                                        n(
-                                                            "el-radio",
-                                                            {
-                                                                attrs: {
-                                                                    "label": "1",
-                                                                    // "v-model": "value",
-                                                                    // "placeholder": "请选择",
-                                                                },
-                                                            },
-                                                            [t._v(t._s("aaa"))]
-                                                        ),
-                                                        n(
-                                                            "el-select",
-                                                            {
-                                                                attrs: {
-                                                                    "v-model": "value",
-                                                                    "placeholder": "请选择",
-                                                                    "style": "margin-left: 20px;"
-                                                                },
-                                                            },
-                                                            [
-                                                                n("el-option", {
-                                                                    attrs: {
-                                                                        "label": "label2",
-                                                                        "value": "value2v"
-                                                                    },
-                                                                }),
-                                                                n("el-option", {
-                                                                    attrs: {
-                                                                        "label": "label3",
-                                                                        "value": "value3v"
-                                                                    },
-                                                                }),
-                                                            ]
-                                                        ),
-                                                    ]
-                                                ),
-                                                n("div", {
-                                                    class: "modal-footer",
-                                                },
-                                                    [n("el-button", {
-                                                        staticStyle: { "background": "#409eff", "color": "#fff" },
-                                                        attrs: {
-                                                            "data-dismiss": "modal",
-                                                        }
-                                                    }, [t._v(t._s("关闭"))]),
-                                                    n("el-button", {
-                                                        staticStyle: { "background": "#409eff", "color": "#fff" },
-                                                        attrs: {
-                                                            "data-dismiss": "modal",
-                                                        },
-                                                    }, [t._v(t._s("确定"))])],
-                                                )
-
-                                                ]
-                                            )]
-                                        )]
                                     ),
 
                                     n("div", {

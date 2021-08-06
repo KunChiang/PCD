@@ -115,19 +115,21 @@ def filelist():
             curxsd.close()
         else:
             path = request.args.get("path")
-            sortList(by=settings['sort']['by'],
-                     reverse=settings['sort']['reverse'])
+            # sortList(by=settings['sort']['by'],
+            #          reverse=settings['sort']['reverse'])
             with open(fileList, 'r') as f:
-                xsdawe = json.load(f)
+                raw_files = json.load(f)
+                raw_files.sort(key=lambda k: (
+                    k.get(settings['sort']['by'], 0)), reverse=settings['sort']['reverse'])
                 files = []
-                for i in xsdawe:
+                for i in raw_files:
                     if i['path'] == path:
                         files.append(i)
-                # files = xsdawe
-                files.reverse()
+                # files = raw_files
+                # files.reverse()
                 datasds = files[int(request.args.get("offset")):int(
                     request.args.get("offset"))+int(request.args.get("limit"))]
-                print(datasds)
+                # print(datasds)
         sdwewqrt = []
         for ix in datasds:
             xsdwok = ix["name"]
@@ -181,17 +183,17 @@ def delete(fid):
 @app.route('/api/newid/', methods=['GET'])
 def newid():
     string = request.args.get("string")
-    print("Get id for: ", string)
+    # print("Get id for: ", string)
     return jsonify({"id": newId(string)})
 
 
 @app.route('/newfolder/', methods=['POST'])
 def newfolder():
     path = request.args.get("path")
-    print("Create folder:", path)
+    # print("Create folder:", path)
     try:
         info = newFolder(path)
-        print(info)
+        # print(info)
         return jsonify(info)
     except Exception as e:
         return jsonify({"created": False, "error": str(e)})
@@ -214,12 +216,10 @@ def getSetting():
     return jsonify(getSettings(id if id else 'default'))
 
 
-@app.route('/updateSetting/', methods=['POST'])
+@app.route('/updateSort', methods=['GET'])
 def setting():
-    field = request.args.get("field")
-    value = request.args.get("value")
-    updateSetting('default', 'sort', field, value)
-    return jsonify("setting {} to: {}".format(field, value))
+    sort = sortQueue()
+    return jsonify({"by": sort['by'], "reverse": sort['reverse'], "desc": sort['desc']})
 
 
 @app.route('/refresh/', methods=['POST'])

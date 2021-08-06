@@ -13,6 +13,15 @@ trash = os.path.join(dataPath, ".trash")
 fileList = os.path.join(dataPath, "filelist.json")
 settings = os.path.join(dataPath, "settings.json")
 ROOTID = "000000"
+SORTSET = [
+    {"by": "name", "reverse": True, "desc": "按名称正序"},
+    {"by": "name", "reverse": False, "desc": "按名称倒序"},
+    {"by": "date", "reverse": True, "desc": "按时间正序"},
+    {"by": "date", "reverse": False, "desc": "按时间倒序"},
+    {"by": "type", "reverse": True, "desc": "按类型排序"},
+    {"by": "size", "reverse": True, "desc": "按文件大小正序"},
+    {"by": "size", "reverse": False, "desc": "按文件大小倒序"},
+]
 
 # path分两种，一种是前端展示的path，一种是实际path，记为_realPath
 # path不以'/'结尾，
@@ -72,7 +81,8 @@ def __initPath(paths):
 
 
 def __initSettings():
-    sets = {"default": {"sort": {"by": "name", "reverse": True}}}
+    sets = {"default": {"sort": {"by": "name",
+                                 "reverse": True, "desc": "按名称正序", "index": 0}}}
     json.dump(sets, open(settings, 'w'))
 
 
@@ -183,7 +193,6 @@ def __updateSizes(it, data, mode='add'):
             i += 1
             continue
         if d['id'] == pids:
-            print("[+] update size", d, it['size'])
             if mode == 'add':
                 d['size'] += it['size']
             elif mode == 'del':
@@ -218,8 +227,8 @@ def rename_file(fid, newname, datasource=fileList):
         for d in datasds:
             if d['id'] == fid:
                 break
-        print("rename: {} to {}".format(os.path.join(toRealPath(
-            d['path']), d['name']), os.path.join(toRealPath(d['path']), newname)))
+        # print("rename: {} to {}".format(os.path.join(toRealPath(
+        #     d['path']), d['name']), os.path.join(toRealPath(d['path']), newname)))
         os.rename(os.path.join(toRealPath(d['path']), d['name']),
                   os.path.join(toRealPath(d['path']), newname))
         d['name'] = newname
@@ -286,7 +295,6 @@ def getId(path, datasource=fileList):
         datasds = json.load(f)
         for d in datasds:
             if os.path.join(d['path'], d['name']) == path:
-                print("parent is: ", d['name'])
                 return d['id']
     return newId(path)
 
@@ -299,16 +307,30 @@ def newId(string):
     return res
 
 
-def updateSetting(id, option, field, value, datasource=settings):
+def updateSetting(id, option, field, value, index, datasource=settings):
     with open(datasource, 'r') as f:
         __settings = json.load(f)
         _setting = __settings[id][option]
+        _setting['index'] = index
         for k, v in _setting.items():
             if k == field:
-                print("will update setting {} from {} to {}".format(k, v, value))
                 _setting[k] = value
         with open(datasource, 'w') as f:
             json.dump(__settings, f)
+
+
+def sortQueue(datasource=settings):
+    with open(datasource, 'r') as f:
+        __settings = json.load(f)
+        index = __settings['default']['sort']['index']
+        index = index + 1 if index + 1 < len(SORTSET) else 0
+        __settings['default']['sort']['index'] = index
+        curr_sort = SORTSET[index]
+        __settings['default']['sort']['by'] = curr_sort['by']
+        __settings['default']['sort']['reverse'] = curr_sort['reverse']
+        with open(datasource, 'w') as f:
+            json.dump(__settings, f)
+    return curr_sort
 
 
 def getSettings(id, datasource=settings):

@@ -234,6 +234,8 @@ def rename_file(fid, newname, datasource=fileList):
         d['name'] = newname
         with open(datasource, 'w') as f:
             json.dump(datasds, f)
+        if d['type'] == 'folder':
+            refreshLocal()
 
 
 def upload_file(file, path, datasource=fileList):

@@ -1098,7 +1098,7 @@ webpackJsonp([0], {
                     return {
                         namels: [],
                         indexs: 0,
-                        currpath: '/',
+                        currpath: '/root',
                         disbxas: !1,
                         loadingx: !1,
                         upurl:
@@ -1235,8 +1235,9 @@ webpackJsonp([0], {
                         )();
                     },
                     __getNewPath: function (path, name) {
-                        if (this.__isRoot(path)) return path + name;
-                        else return path + '/' + name;
+                        // if (this.__isRoot(path)) return path + name;
+                        // else 
+                        return path + '/' + name;
                     },
                     xsdwe: function (e, t, p) {
                         if (t == "folder") {
@@ -1343,7 +1344,7 @@ webpackJsonp([0], {
                         });
                     },
                     __isRoot: function (p) {
-                        if (p == '/') return true;
+                        if (p == '/root') return true;
                         else return false;
                     },
                     back2last: function () {
@@ -1848,7 +1849,7 @@ webpackJsonp([0], {
                                                                             },
                                                                             attrs: {
                                                                                 shadow: "hover",
-                                                                                disabled: e.type == 'folder' ? true : false,
+                                                                                // disabled: e.type == 'folder' ? true : false,
                                                                             },
                                                                             on: {
                                                                                 click: function (n) {

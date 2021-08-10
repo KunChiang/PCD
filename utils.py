@@ -6,7 +6,7 @@ import datetime
 import shutil
 from PIL import Image
 
-dataPath = "datas"
+dataPath = "data"
 thumbnailPath = os.path.join(dataPath, ".thumbs")
 rawFiles = os.path.join(dataPath, "root")
 trash = os.path.join(dataPath, ".trash")

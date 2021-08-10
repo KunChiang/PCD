@@ -2,3 +2,5 @@ flask
 pyyaml
 python-magic
 Pillow
+art
+gunicorn

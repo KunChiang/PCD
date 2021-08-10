@@ -7,6 +7,7 @@ import shutil
 
 import magic
 import yaml
+from art import *
 from flask import (Flask, Response, jsonify, make_response, render_template,
                    request, send_from_directory)
 from PIL import Image
@@ -254,5 +255,6 @@ def search():
 
 
 if '__main__' == __name__:
+    tprint("ZJUN PCD")
     init(loadLocal=True)
-    app.run("0.0.0.0", debug=True)
+    app.run("0.0.0.0")

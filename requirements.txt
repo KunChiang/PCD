@@ -1,3 +1,4 @@
 flask
 pyyaml
 python-magic
+Pillow

@@ -1096,6 +1096,7 @@ webpackJsonp([0], {
                 name: "list",
                 data: function () {
                     return {
+                        fullscreenLoading: false,
                         namels: [],
                         indexs: 0,
                         currpath: '/root',
@@ -1144,7 +1145,14 @@ webpackJsonp([0], {
                         };
                         window.history.pushState(state, "title", "#");
                     }
+                    const loading = this.$loading({
+                        lock: true,//lock的修改符--默认是false
+                        text: '初次加载中...',//显示在加载图标下方的加载文案
+                        spinner: 'el-icon-loading',//自定义加载图标类名
+                        background: 'rgba(0, 0, 0, 0.7)',//遮罩层颜色
+                    });
                     a.getlist(a.indexs);
+                    loading.close();
                 },
                 methods: {
                     getlist: function (t) {
@@ -1271,15 +1279,22 @@ webpackJsonp([0], {
                         return arr
                     },
                     delete: function (d, t) {
-                        var r = this.$confirm("确定要删除文件：" + t + " 吗?");
                         var e = this;
-                        if (r == true) {
-                            e.$axios.get("/delete/" + d);
-                            e.namels = e.__remove(d);
-                            console.log("delete file: " + t);
-                        } else {
-                            console.log("cancel delete");
-                        }
+                        this.$confirm("确定要删除文件：" + t + " 吗?").then(() => {
+                            e.$axios.get("/delete/" + d).then(() => {
+                                e.namels = e.__remove(d);
+                                console.log("delete file: " + t);
+                                this.$message({
+                                    type: 'success',
+                                    message: '删除成功!'
+                                });
+                            });
+                        }).catch(() => {
+                            this.$message({
+                                type: 'info',
+                                message: '已取消删除'
+                            });
+                        });
                     },
                     __rename: function (d, t) {
                         var e = this;
@@ -1306,14 +1321,22 @@ webpackJsonp([0], {
                     },
                     "refresh": function () {
                         var e = this;
+                        const loading = this.$loading({
+                            lock: true,//lock的修改符--默认是false
+                            text: '加载中...',//显示在加载图标下方的加载文案
+                            spinner: 'el-icon-loading',//自定义加载图标类名
+                            background: 'rgba(0, 0, 0, 0.7)',//遮罩层颜色
+                        });
+                        const on_refresh = this.$message({ "message": "正在刷新", type: 'info', duration: "5000" });
                         e.$axios.post('/refresh/').then(response => {
-                            console.log("res: ", response);
                             if (response.res.success) {
                                 console.log("refresh success")
                                 e.indexs = 0;
                                 e.namels = [];
                                 e.getlist(e.indexs);
-                                console.log("namels: ", e.namels)
+                                on_refresh.close();
+                                loading.close()
+                                this.$message({ "message": "刷新成功！", type: 'success' })
                             }
                         })
                     },
@@ -1485,7 +1508,11 @@ webpackJsonp([0], {
                         n = t._self._c || e;
                     return n(
                         "el-row",
-                        { attrs: { gutter: 10 } },
+                        {
+                            attrs: {
+                                gutter: 10,
+                            }
+                        },
                         [
                             n("el-col", { attrs: { span: 24 } },
                                 [
@@ -1559,6 +1586,7 @@ webpackJsonp([0], {
                                                     attrs: {
                                                         size: "small",
                                                         icon: "el-icon-refresh",
+                                                        "v-loading.fullscreen.lock": "fullscreenLoading"
                                                     },
                                                     on: { click: t.refresh }
                                                 },

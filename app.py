@@ -35,7 +35,8 @@ app.config['MAX_CONTENT_LENGTH'] = dataMapsd["configuration"]["maxsize"] * 1024 
 app.config['JSON_AS_ASCII'] = False
 
 ALLOWED_EXTENSIONS = set(dataMapsd["configuration"]["type"])
-
+init(loadLocal=True)
+tprint("ZJUN PCD")
 
 @app.route('/')
 def index():
@@ -256,5 +257,4 @@ def search():
 
 if '__main__' == __name__:
     tprint("ZJUN PCD")
-    init(loadLocal=True)
     app.run("0.0.0.0")

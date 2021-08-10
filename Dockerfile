@@ -8,6 +8,7 @@ LABEL "Version"="1"
 # RUN rm -Rf /var/lib/apt/lists/*
 RUN apt-get update
 RUN apt-get -y install git vim nginx
+RUN pip install flask pyyaml python-magic Pillow art gunicorn
 
 ADD . /app
 WORKDIR /app
@@ -18,6 +19,6 @@ RUN mkdir /app/logs/
 # RUN pip install --upgrade pip
 # RUN pip install pqi
 # RUN pqi use douban
-RUN pip install --no-cache-dir -r requirements.txt
+# RUN pip install --no-cache-dir -r requirements.txt
 
 ENTRYPOINT [ "./gunicorn_start.sh" ]

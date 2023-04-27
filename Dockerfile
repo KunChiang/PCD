@@ -21,4 +21,5 @@ RUN mkdir /app/logs/
 # RUN pqi use douban
 # RUN pip install --no-cache-dir -r requirements.txt
 
-ENTRYPOINT [ "./gunicorn_start.sh" ]
+CMD ["python", "app.py"]
+# ENTRYPOINT [ "./gunicorn_start.sh" ]
